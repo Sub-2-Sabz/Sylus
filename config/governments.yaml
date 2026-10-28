@@ -1,0 +1,50 @@
+# Sylus Governments & Titles Configuration
+governments:
+  democracy:
+    name: "Democracy"
+    description: "Representative government with high citizen freedom."
+    happiness_modifier: 0.10
+    tax_efficiency: 0.95
+    commerce_bonus: 0.15
+    leader_title: "President"
+    govt_title: "Republic"
+  monarchy:
+    name: "Monarchy"
+    description: "Traditional crown rule with stability bonuses."
+    happiness_modifier: 0.05
+    tax_efficiency: 1.05
+    commerce_bonus: 0.00
+    leader_title: "King"
+    govt_title: "Kingdom"
+  republic:
+    name: "Republic"
+    description: "Constitutional republic focused on civic development."
+    happiness_modifier: 0.05
+    tax_efficiency: 1.00
+    commerce_bonus: 0.10
+    leader_title: "Prime Minister"
+    govt_title: "Federal Republic"
+  junta:
+    name: "Military Junta"
+    description: "Military regime prioritizing defense and authority."
+    happiness_modifier: -0.10
+    tax_efficiency: 1.10
+    commerce_bonus: -0.05
+    leader_title: "General"
+    govt_title: "Military Command"
+  communist:
+    name: "Communist State"
+    description: "State-planned economy with heavy resource focus."
+    happiness_modifier: -0.05
+    tax_efficiency: 1.15
+    commerce_bonus: -0.10
+    leader_title: "Chairman"
+    govt_title: "People's Republic"
+  theocracy:
+    name: "Theocracy"
+    description: "Religious leadership with high loyalty."
+    happiness_modifier: 0.00
+    tax_efficiency: 1.00
+    commerce_bonus: 0.05
+    leader_title: "High Priest"
+    govt_title: "Holy State"

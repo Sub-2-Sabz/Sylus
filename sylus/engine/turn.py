@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sylus.config import config
 from sylus.db.models import GlobalState, Nation, Province, ResourceLedger, AuditLog, utc_now
 from sylus.map.renderer import MapRenderer, ASSETS_DIR
+from sylus.engine.economy import process_economy_turn
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)
@@ -95,6 +96,9 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
     state.turn_number = current_turn + 1
     state.next_turn_at = new_next_turn
     state.updated_at = now
+
+    # Process turn economy
+    await process_economy_turn(session)
 
     # Record turn audit log entry
     audit = AuditLog(

@@ -1,9 +1,35 @@
 # Sylus Balance Configuration
 balance:
-  tax_rate_default: 0.10
-  upkeep_per_province: 50
+  tax_rate_default: 0.15
+  tax_rate_optimal: 0.25
+  tax_rate_max: 0.50
+  base_population_income: 10.0
+  base_population_growth_rate: 0.01
+  starting_population: 10000
+  starting_happiness: 0.80
+  base_storage_cap: 10000.0
+  upkeep_per_province: 100.0
+  upkeep_per_pop: 0.01
   starting_resources:
-    gold: 1000
-    food: 500
-    wood: 200
-    iron: 100
+    money: 10000.0
+    wood: 500.0
+    iron: 200.0
+    coal: 200.0
+    lead: 100.0
+    steel: 50.0
+    oil: 100.0
+    gasoline: 50.0
+    aluminum: 50.0
+    munitions: 100.0
+    uranium: 0.0
+    plutonium: 0.0
+    research_points: 0.0
+  score_weights:
+    population: 0.001
+    province: 100.0
+    building: 50.0
+    resource_value: 0.01
+  market:
+    price_sensitivity: 0.05
+    min_price_multiplier: 0.2
+    max_price_multiplier: 5.0
