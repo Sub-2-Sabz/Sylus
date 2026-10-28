@@ -148,3 +148,142 @@ class TechLicense(Base):
 
     licensor: Mapped["Nation"] = relationship("Nation", foreign_keys=[licensor_id])
     licensee: Mapped["Nation"] = relationship("Nation", foreign_keys=[licensee_id])
+
+class TradeOffer(Base):
+    __tablename__ = "trade_offers"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    sender_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    receiver_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=True, index=True)
+    offer_type: Mapped[str] = mapped_column(String(20), default="direct", nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)
+    original_offer_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("trade_offers.id", ondelete="SET NULL"), nullable=True)
+    expires_at_turn: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at_turn: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    asset_type: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    asset_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    total_quantity: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+    filled_quantity: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    unit_price: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    items: Mapped[list["TradeItem"]] = relationship("TradeItem", back_populates="trade_offer", cascade="all, delete-orphan")
+    escrow_holds: Mapped[list["EscrowHold"]] = relationship("EscrowHold", back_populates="trade_offer", cascade="all, delete-orphan")
+
+class TradeItem(Base):
+    __tablename__ = "trade_items"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    trade_offer_id: Mapped[int] = mapped_column(Integer, ForeignKey("trade_offers.id", ondelete="CASCADE"), nullable=False, index=True)
+    side: Mapped[str] = mapped_column(String(20), nullable=False)
+    asset_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    asset_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    quantity: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+
+    trade_offer: Mapped["TradeOffer"] = relationship("TradeOffer", back_populates="items")
+
+class EscrowHold(Base):
+    __tablename__ = "escrow_holds"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    trade_offer_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("trade_offers.id", ondelete="CASCADE"), nullable=True, index=True)
+    contract_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("contracts.id", ondelete="CASCADE"), nullable=True, index=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    asset_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    asset_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    quantity: Mapped[float] = mapped_column(Float, nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="locked", nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    trade_offer: Mapped[Optional["TradeOffer"]] = relationship("TradeOffer", back_populates="escrow_holds")
+    contract: Mapped[Optional["Contract"]] = relationship("Contract", back_populates="escrow_holds")
+
+class PriceHistory(Base):
+    __tablename__ = "price_history"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    asset_type: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
+    asset_id: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    unit_price: Mapped[float] = mapped_column(Float, nullable=False)
+    quantity: Mapped[float] = mapped_column(Float, nullable=False)
+    turn_number: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+class NationReputation(Base):
+    __tablename__ = "nation_reputations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), unique=True, nullable=False, index=True)
+    score: Mapped[float] = mapped_column(Float, default=100.0, nullable=False)
+    contracts_fulfilled: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    contracts_breached: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+class Contract(Base):
+    __tablename__ = "contracts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    title: Mapped[str] = mapped_column(String(150), nullable=False)
+    contract_type: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
+    status: Mapped[str] = mapped_column(String(30), default="pending_signatures", nullable=False)
+    duration_turns: Mapped[int] = mapped_column(Integer, default=24, nullable=False)
+    start_turn: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    end_turn: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    plain_language_summary: Mapped[str] = mapped_column(Text, nullable=False)
+    stated_penalty_type: Mapped[str] = mapped_column(String(50), default="fine", nullable=False)
+    stated_penalty_details: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
+    appeal_window_turns: Mapped[int] = mapped_column(Integer, default=3, nullable=False)
+    appeal_ends_at_turn: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    is_immutable: Mapped[bool] = mapped_column(default=False, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    signatories: Mapped[list["ContractSignatory"]] = relationship("ContractSignatory", back_populates="contract", cascade="all, delete-orphan")
+    obligations: Mapped[list["ContractObligation"]] = relationship("ContractObligation", back_populates="contract", cascade="all, delete-orphan")
+    escrow_holds: Mapped[list["EscrowHold"]] = relationship("EscrowHold", back_populates="contract", cascade="all, delete-orphan")
+    appeals: Mapped[list["ContractAppeal"]] = relationship("ContractAppeal", back_populates="contract", cascade="all, delete-orphan")
+
+class ContractSignatory(Base):
+    __tablename__ = "contract_signatories"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    contract_id: Mapped[int] = mapped_column(Integer, ForeignKey("contracts.id", ondelete="CASCADE"), nullable=False, index=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    role: Mapped[str] = mapped_column(String(50), default="party", nullable=False)
+    signed: Mapped[bool] = mapped_column(default=False, nullable=False)
+    signed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    contract: Mapped["Contract"] = relationship("Contract", back_populates="signatories")
+
+class ContractObligation(Base):
+    __tablename__ = "contract_obligations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    contract_id: Mapped[int] = mapped_column(Integer, ForeignKey("contracts.id", ondelete="CASCADE"), nullable=False, index=True)
+    payer_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    payee_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    obligation_type: Mapped[str] = mapped_column(String(30), default="recurring_per_turn", nullable=False)
+    asset_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    asset_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    amount: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)
+    last_executed_turn: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
+    contract: Mapped["Contract"] = relationship("Contract", back_populates="obligations")
+
+class ContractAppeal(Base):
+    __tablename__ = "contract_appeals"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    contract_id: Mapped[int] = mapped_column(Integer, ForeignKey("contracts.id", ondelete="CASCADE"), nullable=False, index=True)
+    appellant_nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    reason: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)
+    appeal_turn: Mapped[int] = mapped_column(Integer, nullable=False)
+    admin_override_by: Mapped[Optional[int]] = mapped_column(BigInteger, nullable=True)
+    admin_notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    contract: Mapped["Contract"] = relationship("Contract", back_populates="appeals")
