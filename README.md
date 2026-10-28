@@ -43,6 +43,7 @@ Follow this step-by-step guide to set up and deploy Sylus completely for free on
 5. Set the required Environment Variables in Render:
    - `DATABASE_URL`: *(Your Neon connection string from Step 3)*
    - `DISCORD_TOKEN`: *(Your Discord bot token from Step 2)*
+   - `INTERNAL_SECRET`: *(A random secret string for triggering internal turn execution)*
 6. Tap **Apply**. Render will build the Docker container, launch the web server on `/health`, run database migrations, and start the Discord bot.
 7. Copy your deployed app URL (e.g., `https://sylus.onrender.com`).
 
@@ -51,40 +52,14 @@ To prevent Render's free tier from spinning down after 15 minutes of inactivity:
 1. Log into [Cloudflare Dashboard](https://dash.cloudflare.com/).
 2. Tap **Workers & Pages** -> **Create Application** -> **Create Worker**.
 3. Name it `sylus-keepalive` and tap **Deploy**.
-4. Tap **Edit Code**. Paste the code from `workers/keepalive/worker.js`:
-   ```javascript
-   export default {
-     async scheduled(event, env, ctx) {
-       ctx.waitUntil(pingTarget(env));
-     },
-     async fetch(request, env, ctx) {
-       const res = await pingTarget(env);
-       return new Response(JSON.stringify(res), {
-         headers: { "Content-Type": "application/json" },
-         status: res.ok ? 200 : 500,
-       });
-     },
-   };
-
-   async function pingTarget(env) {
-     const targetUrl = env.TARGET_URL;
-     if (!targetUrl) {
-       return { ok: false, error: "TARGET_URL not configured" };
-     }
-     const url = targetUrl.endsWith("/health") ? targetUrl : `${targetUrl.replace(/\/+$/, "")}/health`;
-     try {
-       const response = await fetch(url, { method: "GET" });
-       return { ok: response.ok, status: response.status, url, timestamp: new Date().toISOString() };
-     } catch (err) {
-       return { ok: false, error: err.message || String(err), url, timestamp: new Date().toISOString() };
-     }
-   }
-   ```
+4. Tap **Edit Code**. Paste the code from `workers/keepalive/worker.js`.
 5. Tap **Save and Deploy**.
-6. Tap **Settings** -> **Variables**, add an environment variable:
-   - `TARGET_URL`: `https://sylus.onrender.com`
+6. Tap **Settings** -> **Variables**, add environment variables:
+   - `HEALTH_URL`: `https://sylus.onrender.com/health`
+   - `ALERT_WEBHOOK_URL`: *(Optional Discord webhook URL to receive failure alerts)*
 7. Tap **Settings** -> **Triggers** -> **Add Cron Trigger**:
-   - Cron Expression: `*/5 * * * *` (Every 5 minutes)
+   - Cron Expression: `2-59/5 * * * *` (Every 5 minutes, offset by 2 minutes from UptimeRobot)
+8. Open the Worker URL in your browser to confirm it returns `Sylus Keep-Alive status: OK`.
 
 ### Step 6: UptimeRobot Backup Monitoring
 1. Go to [UptimeRobot](https://uptimerobot.com/).
@@ -102,11 +77,24 @@ To prevent Render's free tier from spinning down after 15 minutes of inactivity:
 | Issue | Cause | Solution |
 | :--- | :--- | :--- |
 | **Bot appears offline on Discord** | Invalid token or missing Gateway Intents. | Double-check `DISCORD_TOKEN` in Render environment variables. Ensure **Message Content Intent** is enabled in Discord Developer Portal. |
-| **Render Web Service sleeping** | Inactivity timeout on free tier (15 mins). | Verify Cloudflare Worker Cron trigger (`*/5 * * * *`) and UptimeRobot monitor pointing to `https://<app>.onrender.com/health`. |
+| **Render Web Service sleeping** | Inactivity timeout on free tier (15 mins). | Verify Cloudflare Worker Cron trigger (`2-59/5 * * * *`) and UptimeRobot monitor pointing to `https://<app>.onrender.com/health`. |
 | **Database Connection Errors** | Missing `asyncpg` driver prefix or wrong URI format. | Ensure `DATABASE_URL` starts with `postgresql+asyncpg://` instead of `postgresql://`. |
 | **Database Migrations Fail on Startup** | Unreachable database or pending locking transaction. | Check Neon project status and confirm database connection details. Review service startup logs on Render dashboard. |
 | **Port / Address Already in Use** | Port conflict during local startup or container startup. | Sylus reads `PORT` or `HTTP_PORT` dynamically. Ensure `PORT=8080` is exposed properly in Docker. |
 | **Discord Bot Disconnecting Repeatedly** | Temporary Discord API network outage or rate limit. | Sylus handles automatic reconnects with exponential backoff (`reconnect_initial_backoff: 5s` up to `300s`). |
+
+---
+
+## Expected Costs & Hosting Limits (Section 15.6)
+
+- **Total Expected Monthly Cost:** **$0.00**
+- **Render Free Tier:** 750 free instance hours/month, spins down after 15 mins of HTTP inactivity, ephemeral disk. Keep-alive pings keep it awake.
+- **Neon Free Tier:** 0.5 GiB storage, 190 compute hours/month, scales to zero when idle. Using `NullPool` prevents unneeded DB connections.
+- **Cloudflare Workers:** 100,000 requests/day free allowance.
+- **Discord Attachments:** Maximum 10 MB per file limit for backup snapshots and map images.
+
+### Upgrade Path
+If the free setup ever becomes unreliable or hits compute limits as player count grows, moving to an always-on VPS (e.g. $5/month Hetzner or DigitalOcean droplet) only requires pointing the Docker image to the new host. No code changes are required because game logic does not depend on keep-alive pings to operate correctly.
 
 ---
 

@@ -1,0 +1,647 @@
+military:
+  base_calculator:
+    base_build_time_turns: 1
+    min_reliability: 0.10
+    max_reliability: 0.99
+    base_upkeep_ratio: 0.05
+    stealth_detection_scale: 100
+
+  categories:
+    infantry:
+      display_name: "Infantry / Soldier Loadouts"
+      description: "Foot soldiers, special forces, and motorized infantry equipment."
+      allowed_component_slots:
+        - chassis
+        - armor
+        - primary_weapon
+        - secondary_weapon
+        - features
+        - crew
+      base_stats:
+        attack: 10
+        defense: 12
+        speed: 15
+        range: 50
+        fuel_use: 0
+        stealth: 40
+        detection: 20
+        reliability: 0.95
+        crew: 10
+        production_cost:
+          money: 500
+          munitions: 10
+        upkeep:
+          money: 50
+        build_time: 1
+
+    air_defense:
+      display_name: "Air Defense Systems"
+      description: "Surface-to-air missile launchers and anti-aircraft artillery."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - armor
+        - primary_weapon
+        - radar
+        - countermeasures
+        - features
+        - crew
+      base_stats:
+        attack: 30
+        defense: 20
+        speed: 40
+        range: 150
+        fuel_use: 5
+        stealth: 20
+        detection: 80
+        reliability: 0.90
+        crew: 4
+        production_cost:
+          money: 2000
+          steel: 20
+          electronics: 10
+          munitions: 30
+        upkeep:
+          money: 150
+        build_time: 2
+
+    fighters:
+      display_name: "Fighter Aircraft"
+      description: "Air superiority and interceptor combat aircraft."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - armor
+        - primary_weapon
+        - secondary_weapon
+        - radar
+        - countermeasures
+        - features
+        - crew
+      base_stats:
+        attack: 60
+        defense: 35
+        speed: 800
+        range: 1200
+        fuel_use: 25
+        stealth: 30
+        detection: 70
+        reliability: 0.88
+        crew: 1
+        production_cost:
+          money: 8000
+          aluminum: 40
+          steel: 20
+          gasoline: 10
+          electronics: 25
+        upkeep:
+          money: 600
+        build_time: 3
+
+    bombers:
+      display_name: "Bomber Aircraft"
+      description: "Long-range tactical and strategic strike aircraft."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - armor
+        - primary_weapon
+        - secondary_weapon
+        - radar
+        - countermeasures
+        - features
+        - crew
+      base_stats:
+        attack: 120
+        defense: 30
+        speed: 650
+        range: 3000
+        fuel_use: 60
+        stealth: 15
+        detection: 50
+        reliability: 0.85
+        crew: 4
+        production_cost:
+          money: 15000
+          aluminum: 80
+          steel: 40
+          gasoline: 20
+          electronics: 35
+        upkeep:
+          money: 1200
+        build_time: 4
+
+    helicopters:
+      display_name: "Attack & Utility Helicopters"
+      description: "Rotary-wing aircraft for close air support and transport."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - armor
+        - primary_weapon
+        - secondary_weapon
+        - radar
+        - countermeasures
+        - features
+        - crew
+      base_stats:
+        attack: 45
+        defense: 25
+        speed: 280
+        range: 450
+        fuel_use: 15
+        stealth: 25
+        detection: 50
+        reliability: 0.90
+        crew: 2
+        production_cost:
+          money: 5000
+          aluminum: 30
+          steel: 15
+          gasoline: 10
+          electronics: 15
+        upkeep:
+          money: 350
+        build_time: 2
+
+    tanks:
+      display_name: "Main Battle Tanks"
+      description: "Heavy armored combat vehicles with high firepower."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - armor
+        - primary_weapon
+        - secondary_weapon
+        - radar
+        - countermeasures
+        - features
+        - crew
+      base_stats:
+        attack: 85
+        defense: 90
+        speed: 65
+        range: 400
+        fuel_use: 20
+        stealth: 10
+        detection: 40
+        reliability: 0.88
+        crew: 4
+        production_cost:
+          money: 6000
+          steel: 60
+          gasoline: 15
+          munitions: 40
+        upkeep:
+          money: 450
+        build_time: 3
+
+    apcs:
+      display_name: "APCs & IFVs"
+      description: "Armored Personnel Carriers and Infantry Fighting Vehicles."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - armor
+        - primary_weapon
+        - secondary_weapon
+        - radar
+        - countermeasures
+        - features
+        - crew
+      base_stats:
+        attack: 35
+        defense: 50
+        speed: 85
+        range: 600
+        fuel_use: 10
+        stealth: 15
+        detection: 35
+        reliability: 0.92
+        crew: 3
+        production_cost:
+          money: 3000
+          steel: 35
+          gasoline: 10
+          munitions: 20
+        upkeep:
+          money: 200
+        build_time: 2
+
+    artillery:
+      display_name: "Artillery & Rocket Systems"
+      description: "Long-range indirect fire field artillery and rocket artillery."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - armor
+        - primary_weapon
+        - radar
+        - features
+        - crew
+      base_stats:
+        attack: 95
+        defense: 20
+        speed: 40
+        range: 350
+        fuel_use: 12
+        stealth: 15
+        detection: 40
+        reliability: 0.90
+        crew: 5
+        production_cost:
+          money: 4000
+          steel: 45
+          munitions: 60
+        upkeep:
+          money: 300
+        build_time: 2
+
+    missiles:
+      display_name: "Cruise & Ballistic Missiles"
+      description: "Long-range guided missile strike systems."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - primary_weapon
+        - radar
+        - features
+      base_stats:
+        attack: 200
+        defense: 5
+        speed: 2500
+        range: 2000
+        fuel_use: 0
+        stealth: 30
+        detection: 60
+        reliability: 0.85
+        crew: 0
+        production_cost:
+          money: 12000
+          aluminum: 30
+          steel: 20
+          electronics: 40
+          munitions: 100
+        upkeep:
+          money: 100
+        build_time: 2
+
+    warships:
+      display_name: "Naval Warships"
+      description: "Surface combat ships from corvettes to aircraft carriers."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - armor
+        - primary_weapon
+        - secondary_weapon
+        - radar
+        - countermeasures
+        - features
+        - crew
+      base_stats:
+        attack: 150
+        defense: 160
+        speed: 32
+        range: 6000
+        fuel_use: 80
+        stealth: 10
+        detection: 90
+        reliability: 0.92
+        crew: 150
+        production_cost:
+          money: 30000
+          steel: 200
+          aluminum: 50
+          oil: 50
+          electronics: 80
+          munitions: 150
+        upkeep:
+          money: 2500
+        build_time: 5
+
+    submarines:
+      display_name: "Submarines"
+      description: "Sub-surface stealth vessels."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - armor
+        - primary_weapon
+        - radar
+        - countermeasures
+        - features
+        - crew
+      base_stats:
+        attack: 140
+        defense: 80
+        speed: 28
+        range: 8000
+        fuel_use: 40
+        stealth: 85
+        detection: 75
+        reliability: 0.88
+        crew: 60
+        production_cost:
+          money: 25000
+          steel: 150
+          aluminum: 40
+          electronics: 90
+          munitions: 120
+        upkeep:
+          money: 2000
+        build_time: 5
+
+    drones:
+      display_name: "Unmanned Drones (UAVs)"
+      description: "Unmanned aerial strike and reconnaissance platforms."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - primary_weapon
+        - radar
+        - countermeasures
+        - features
+      base_stats:
+        attack: 40
+        defense: 10
+        speed: 400
+        range: 800
+        fuel_use: 8
+        stealth: 60
+        detection: 65
+        reliability: 0.90
+        crew: 0
+        production_cost:
+          money: 3500
+          aluminum: 20
+          electronics: 30
+          munitions: 15
+        upkeep:
+          money: 150
+        build_time: 1
+
+    nuclear_delivery:
+      display_name: "Nuclear Delivery Systems"
+      description: "ICBMs and heavy strategic nuclear delivery warheads."
+      allowed_component_slots:
+        - chassis
+        - engine
+        - primary_weapon
+        - radar
+        - features
+      base_stats:
+        attack: 1000
+        defense: 0
+        speed: 7000
+        range: 12000
+        fuel_use: 0
+        stealth: 20
+        detection: 80
+        reliability: 0.82
+        crew: 0
+        production_cost:
+          money: 100000
+          steel: 100
+          aluminum: 100
+          electronics: 150
+          uranium: 50
+          plutonium: 25
+        upkeep:
+          money: 10000
+        build_time: 8
+
+  components:
+    chassis:
+      light_chassis:
+        name: "Light Chassis"
+        required_tech: "mil_basic_infantry"
+        slot: chassis
+        stat_modifiers:
+          speed: 10
+          stealth: 10
+          defense: -5
+        cost_modifiers:
+          money: 100
+      medium_chassis:
+        name: "Medium Chassis"
+        required_tech: "mil_combined_arms"
+        slot: chassis
+        stat_modifiers:
+          speed: 0
+          defense: 15
+          reliability: 0.02
+        cost_modifiers:
+          money: 500
+          steel: 10
+      heavy_chassis:
+        name: "Heavy Reinforced Chassis"
+        required_tech: "mil_armor_1"
+        slot: chassis
+        stat_modifiers:
+          speed: -15
+          defense: 40
+          reliability: -0.05
+        cost_modifiers:
+          money: 1500
+          steel: 35
+
+    engine:
+      standard_diesel:
+        name: "Standard Diesel Engine"
+        required_tech: "mil_basic_infantry"
+        slot: engine
+        stat_modifiers:
+          speed: 15
+          fuel_use: 5
+          reliability: 0.05
+        cost_modifiers:
+          money: 300
+      turbojet_engine:
+        name: "Turbojet Engine"
+        required_tech: "mil_aesthetics_aviation"
+        slot: engine
+        stat_modifiers:
+          speed: 250
+          range: 300
+          fuel_use: 20
+        cost_modifiers:
+          money: 2000
+          aluminum: 15
+          gasoline: 10
+      nuclear_reactor:
+        name: "Naval Nuclear Reactor"
+        required_tech: "mil_naval_power"
+        slot: engine
+        stat_modifiers:
+          range: 5000
+          speed: 10
+          fuel_use: -30
+        cost_modifiers:
+          money: 10000
+          uranium: 5
+
+    armor:
+      steel_plating:
+        name: "Steel Armor Plating"
+        required_tech: "mil_armor_1"
+        slot: armor
+        stat_modifiers:
+          defense: 25
+          speed: -10
+        cost_modifiers:
+          money: 400
+          steel: 20
+      composite_armor:
+        name: "Advanced Composite Armor"
+        required_tech: "mil_armor_2"
+        slot: armor
+        stat_modifiers:
+          defense: 55
+          stealth: 5
+        cost_modifiers:
+          money: 1800
+          steel: 30
+          aluminum: 15
+      reactive_armor:
+        name: "Explosive Reactive Armor (ERA)"
+        required_tech: "mil_armor_2"
+        slot: armor
+        stat_modifiers:
+          defense: 35
+          attack: 5
+        cost_modifiers:
+          money: 1200
+          steel: 15
+          munitions: 10
+
+    weapons:
+      assault_rifles:
+        name: "Standard Assault Rifles"
+        required_tech: "mil_basic_infantry"
+        slot: primary_weapon
+        stat_modifiers:
+          attack: 15
+        cost_modifiers:
+          money: 100
+          munitions: 5
+      smoothbore_cannon:
+        name: "120mm Smoothbore Cannon"
+        required_tech: "mil_armor_1"
+        slot: primary_weapon
+        stat_modifiers:
+          attack: 75
+          range: 50
+        cost_modifiers:
+          money: 1500
+          steel: 25
+          munitions: 25
+      air_superiority_cannon:
+        name: "30mm Rotary Auto-cannon"
+        required_tech: "mil_aesthetics_aviation"
+        slot: primary_weapon
+        stat_modifiers:
+          attack: 45
+          speed: 20
+        cost_modifiers:
+          money: 1000
+          munitions: 20
+      guided_missiles:
+        name: "Precision Guided Missiles"
+        required_tech: "mil_missiles_1"
+        slot: primary_weapon
+        stat_modifiers:
+          attack: 130
+          range: 500
+        cost_modifiers:
+          money: 4000
+          electronics: 20
+          munitions: 40
+
+    radar:
+      basic_radar:
+        name: "Basic Pulse Radar"
+        required_tech: "mil_radar_1"
+        slot: radar
+        stat_modifiers:
+          detection: 30
+          range: 100
+        cost_modifiers:
+          money: 800
+          electronics: 10
+      aesa_radar:
+        name: "Advanced AESA Radar"
+        required_tech: "mil_radar_2"
+        slot: radar
+        stat_modifiers:
+          detection: 70
+          range: 400
+          stealth: 5
+        cost_modifiers:
+          money: 3500
+          electronics: 30
+
+    countermeasures:
+      flare_chaff:
+        name: "Flare & Chaff Dispensers"
+        required_tech: "mil_aesthetics_aviation"
+        slot: countermeasures
+        stat_modifiers:
+          defense: 15
+          stealth: 10
+        cost_modifiers:
+          money: 500
+      active_protection:
+        name: "Active Protection System (APS)"
+        required_tech: "mil_armor_2"
+        slot: countermeasures
+        stat_modifiers:
+          defense: 35
+          reliability: -0.02
+        cost_modifiers:
+          money: 1500
+          electronics: 15
+
+    features:
+      stealth_coating:
+        name: "Radar Absorbent Stealth Coating"
+        required_tech: "mil_stealth"
+        slot: features
+        stat_modifiers:
+          stealth: 40
+          detection: 10
+        cost_modifiers:
+          money: 4000
+          aluminum: 10
+      gps_guidance:
+        name: "Satellite GPS Guidance"
+        required_tech: "mil_missiles_1"
+        slot: features
+        stat_modifiers:
+          attack: 20
+          reliability: 0.05
+        cost_modifiers:
+          money: 1000
+          electronics: 15
+
+    crew:
+      automated_systems:
+        name: "Automated Control Systems"
+        required_tech: "mil_radar_2"
+        slot: crew
+        stat_modifiers:
+          crew: -2
+          reliability: -0.03
+        cost_modifiers:
+          money: 2000
+          electronics: 20
+      trained_veterans:
+        name: "Veteran Crew Compartment"
+        required_tech: "mil_basic_infantry"
+        slot: crew
+        stat_modifiers:
+          attack: 10
+          defense: 10
+          reliability: 0.05
+        cost_modifiers:
+          money: 500

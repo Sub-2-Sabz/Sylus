@@ -39,4 +39,4 @@ tests/                 # Pytest test suite with async SQLite
 
 ## System Interfaces
 - **Discord Bot**: Built on Py-cord 2.8+, supporting slash commands and async event handling.
-- **Web API**: Built on `aiohttp` listening on port `8080`. Offers `GET /`, `GET /health`, and `HEAD /health` without database dependencies.
+- **Web API**: Built on `aiohttp` listening on port `8080`. Offers `GET /`, `GET /health`, and `HEAD /health` (cached zero-DB response), and `POST /internal/turn` (secret protected).

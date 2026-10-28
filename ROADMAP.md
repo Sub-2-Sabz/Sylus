@@ -88,7 +88,15 @@
 ## Phase 9: Diplomacy & Blocs (Unfinished / Future)
 - [ ] Alliances, blocs, shared treasuries, auto-created channels, embargoes, UN-style votes.
 
-## Phase 10: Military, Warfare & Covert Ops (Unfinished / Future)
-- [ ] Component-based unit designer and production queues.
+## Phase 9A: Military Components & Stat Calculator (Completed)
+- [x] Defined all 13 unit categories and component slots in `/config/military.yaml`.
+- [x] Implemented pure stat calculator computing attack, defense, speed, range, fuel use, stealth, detection, reliability, crew, production cost, upkeep, build time.
+- [x] Enforced research technology requirements for selected components.
+- [x] Created `UnitDesign` SQLAlchemy model and Alembic migration for saved named models.
+- [x] Comprehensive test suite for military designer (`tests/test_military.py`).
+
+## Phase 9B / 10: Military Discord UI, Warfare & Covert Ops (Unfinished / Future)
+- [ ] Discord UI (modal + select multi-step view) for unit designer (`/designer`).
+- [ ] Unit production queues at factories/shipyards/airbases and logistics/supply lines.
 - [ ] War system with terrain, weather, morale, occupation, peace treaties, and nukes.
 - [ ] Espionage and covert ops.

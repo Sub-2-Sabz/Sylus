@@ -12,6 +12,8 @@ def test_worker_js_structure():
     assert "async fetch(" in content
     assert "pingTarget(" in content
     assert "/health" in content
+    assert "HEALTH_URL" in content
+    assert "ALERT_WEBHOOK_URL" in content
 
 def test_wrangler_jsonc_valid():
     wrangler_path = Path("workers/keepalive/wrangler.jsonc")
@@ -23,4 +25,5 @@ def test_wrangler_jsonc_valid():
     assert data["main"] == "worker.js"
     assert "triggers" in data
     assert "crons" in data["triggers"]
-    assert "*/5 * * * *" in data["triggers"]["crons"]
+    assert "2-59/5 * * * *" in data["triggers"]["crons"]
+    assert "HEALTH_URL" in data["vars"]

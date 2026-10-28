@@ -13,5 +13,7 @@ services:
         sync: false
       - key: DISCORD_TOKEN
         sync: false
+      - key: INTERNAL_SECRET
+        sync: false
       - key: LOG_LEVEL
         value: INFO
