@@ -1,0 +1,229 @@
+# Sylus Buildings Configuration
+buildings:
+  sawmill:
+    name: "Sawmill"
+    description: "Produces wood from nearby forests."
+    cost:
+      money: 500
+    construction_turns: 1
+    upkeep:
+      money: 50
+    inputs: {}
+    outputs:
+      wood: 20
+    terrain_bonus:
+      forest: 1.5
+    slot_cost: 1
+
+  lead_mine:
+    name: "Lead Mine"
+    description: "Extracts lead ore."
+    cost:
+      money: 800
+      wood: 50
+    construction_turns: 2
+    upkeep:
+      money: 80
+    inputs: {}
+    outputs:
+      lead: 15
+    terrain_bonus:
+      mountain: 1.3
+    slot_cost: 1
+
+  iron_mine:
+    name: "Iron Mine"
+    description: "Extracts iron ore."
+    cost:
+      money: 1000
+      wood: 100
+    construction_turns: 2
+    upkeep:
+      money: 100
+    inputs: {}
+    outputs:
+      iron: 15
+    terrain_bonus:
+      mountain: 1.3
+    slot_cost: 1
+
+  coal_mine:
+    name: "Coal Mine"
+    description: "Extracts coal deposits."
+    cost:
+      money: 1000
+      wood: 100
+    construction_turns: 2
+    upkeep:
+      money: 100
+    inputs: {}
+    outputs:
+      coal: 20
+    terrain_bonus:
+      mountain: 1.2
+    slot_cost: 1
+
+  steel_mill:
+    name: "Steel Mill"
+    description: "Refines iron and coal into steel."
+    cost:
+      money: 3000
+      iron: 100
+      wood: 200
+    construction_turns: 3
+    upkeep:
+      money: 300
+    inputs:
+      iron: 10
+      coal: 10
+    outputs:
+      steel: 12
+    terrain_bonus: {}
+    slot_cost: 2
+
+  oil_well:
+    name: "Oil Well"
+    description: "Extracts crude petroleum."
+    cost:
+      money: 2500
+      steel: 50
+    construction_turns: 2
+    upkeep:
+      money: 200
+    inputs: {}
+    outputs:
+      oil: 15
+    terrain_bonus:
+      desert: 1.4
+      coastal: 1.2
+    slot_cost: 1
+
+  refinery:
+    name: "Refinery"
+    description: "Processes crude oil into gasoline."
+    cost:
+      money: 4000
+      steel: 100
+    construction_turns: 3
+    upkeep:
+      money: 350
+    inputs:
+      oil: 10
+    outputs:
+      gasoline: 10
+    terrain_bonus: {}
+    slot_cost: 2
+
+  aluminum_smelter:
+    name: "Aluminum Smelter"
+    description: "Smelts bauxite into aluminum."
+    cost:
+      money: 3500
+      steel: 80
+    construction_turns: 3
+    upkeep:
+      money: 300
+      coal: 5
+    inputs: {}
+    outputs:
+      aluminum: 10
+    terrain_bonus: {}
+    slot_cost: 2
+
+  munitions_factory:
+    name: "Munitions Factory"
+    description: "Manufactures ammunition from lead and steel."
+    cost:
+      money: 3000
+      steel: 100
+    construction_turns: 2
+    upkeep:
+      money: 250
+    inputs:
+      lead: 8
+      steel: 2
+    outputs:
+      munitions: 10
+    terrain_bonus: {}
+    slot_cost: 2
+
+  uranium_mine:
+    name: "Uranium Mine"
+    description: "Extracts rare radioactive uranium ore."
+    cost:
+      money: 10000
+      steel: 300
+    construction_turns: 5
+    upkeep:
+      money: 1000
+    inputs: {}
+    outputs:
+      uranium: 2
+    terrain_bonus:
+      mountain: 1.2
+    slot_cost: 3
+
+  plutonium_reactor:
+    name: "Plutonium Reactor"
+    description: "Enriches uranium into weapon-grade plutonium."
+    cost:
+      money: 25000
+      steel: 800
+      aluminum: 300
+    construction_turns: 8
+    upkeep:
+      money: 2500
+    inputs:
+      uranium: 2
+    outputs:
+      plutonium: 1
+    terrain_bonus: {}
+    slot_cost: 4
+
+  research_center:
+    name: "Research Center"
+    description: "Generates research points for scientific advancement."
+    cost:
+      money: 2000
+      wood: 100
+      steel: 50
+    construction_turns: 2
+    upkeep:
+      money: 200
+    inputs: {}
+    outputs:
+      research_points: 10
+    terrain_bonus:
+      urban: 1.3
+    slot_cost: 1
+
+  bank:
+    name: "Bank & Commerce Hub"
+    description: "Stimulates financial activity and generates revenue."
+    cost:
+      money: 1500
+      wood: 150
+    construction_turns: 2
+    upkeep:
+      money: 50
+    inputs: {}
+    outputs:
+      money: 250
+    terrain_bonus:
+      urban: 1.5
+    slot_cost: 1
+
+  warehouse:
+    name: "Warehouse"
+    description: "Increases resource storage cap for the nation."
+    cost:
+      money: 1000
+      wood: 200
+    construction_turns: 1
+    upkeep:
+      money: 30
+    inputs: {}
+    outputs: {}
+    storage_bonus: 5000
+    terrain_bonus: {}
+    slot_cost: 1

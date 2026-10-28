@@ -39,19 +39,28 @@
 - [x] Fast-forward CLI tool (`python -m sylus.cli fast-forward --turns N`).
 - [x] Unit test suite (`tests/test_turn_engine.py`) covering mid-turn crash rollback, overlapping instances, 5 overdue turns catch-up, no duplicate turns, snapshot export/restore, pause/resume, and CLI fast-forward.
 
-## Phase 5: Nations & Economy (Unfinished / Future)
-- [ ] Nation registration slash command (`/nation create`).
-- [ ] Territory/province claiming logic and boundaries.
-- [ ] Building production chains, upkeep, storage, and resource income generation per turn.
-- [ ] Tax rates, happiness/stability, and national policies.
-- [ ] Nation profile and status slash commands (`/nation info`).
+## Phase 5: Nations & Economy (Completed)
+- [x] `/nation create` command (name, leader, capital province, color, flag, government type, ideology, starting policy; enforced 1 nation per user constraint).
+- [x] Government types & national titles system with custom leader and state titles.
+- [x] Policies system with cooldowns, transition costs, and economic multipliers.
+- [x] Building construction system (construction turns, upkeep, slot caps per province, terrain bonuses, demolition/upgrades).
+- [x] Complete 13-resource production chain table (money, wood, lead, iron, steel, coal, oil, gasoline, aluminum, munitions, uranium, plutonium, research_points).
+- [x] Laffer-style tax revenue curve affecting population happiness and growth.
+- [x] Commerce income generation scaling with open market policies and stability.
+- [x] Storage capacity limits, resource spoilage/decay per turn, and supply/demand inflation market price index.
+- [x] Dynamic nation score calculation formula.
+- [x] `/nation` dashboards (`info`, `stats`, `economy`, `provinces` with paginated view, `policy`, `build`).
+- [x] Externalized all game balance parameters to `/config/*.yaml`.
 
-## Phase 6: Trading & Contracts (Unfinished / Future)
-- [ ] Trade agreement proposal and execution between nations.
-- [ ] Market system and resource exchange.
+## Phase 6: Research (Unfinished / Future)
+- [ ] Tech trees (Military, Economy, Community, Industry, Energy, Espionage, Space/Nuclear).
+- [ ] Research points generation and technology unlocking.
+
+## Phase 7: Trading & Contracts (Unfinished / Future)
+- [ ] Player-to-player trade agreement proposals and marketplace.
 - [ ] Automated contract enforcement and escrow.
 
-## Phase 7: Research, Warfare & Covert Ops (Unfinished / Future)
-- [ ] Research tech trees and component-based unit designer.
-- [ ] War system with terrain/weather modifiers, combat resolution, and peace treaties.
+## Phase 8: Military, Warfare & Covert Ops (Unfinished / Future)
+- [ ] Component-based unit designer and production queues.
+- [ ] War system with terrain, weather, morale, occupation, peace treaties, and nukes.
 - [ ] Espionage and covert ops.

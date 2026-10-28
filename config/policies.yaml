@@ -1,0 +1,42 @@
+# Sylus Policies Configuration
+policies:
+  free_market:
+    name: "Free Market Economy"
+    description: "Promotes commerce and private trade at the cost of slight revenue efficiency."
+    cooldown_turns: 12
+    transition_cost:
+      money: 500
+    effects:
+      commerce_multiplier: 1.25
+      production_multiplier: 1.05
+      happiness_bonus: 0.05
+  state_planned:
+    name: "State Planned Economy"
+    description: "Direct control over industry increases raw material output."
+    cooldown_turns: 12
+    transition_cost:
+      money: 500
+    effects:
+      commerce_multiplier: 0.85
+      production_multiplier: 1.20
+      happiness_bonus: -0.05
+  isolationism:
+    name: "Isolationism"
+    description: "Focuses on self-reliance and domestic defense."
+    cooldown_turns: 12
+    transition_cost:
+      money: 500
+    effects:
+      commerce_multiplier: 0.70
+      production_multiplier: 1.10
+      happiness_bonus: 0.00
+  welfare_state:
+    name: "Welfare State"
+    description: "Invests in public services and citizen happiness."
+    cooldown_turns: 12
+    transition_cost:
+      money: 1000
+    effects:
+      commerce_multiplier: 1.00
+      production_multiplier: 0.95
+      happiness_bonus: 0.15

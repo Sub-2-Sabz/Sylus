@@ -1,11 +1,68 @@
 # Sylus Resources Configuration
 resources:
   types:
-    - name: "gold"
-      description: "Currency for trade and upkeep"
-    - name: "food"
-      description: "Sustenance for populations and armies"
+    - name: "money"
+      description: "Currency for trade, upkeep, and commerce"
+      base_price: 1.0
+      spoilage_rate: 0.0
+      is_storable: true
     - name: "wood"
-      description: "Construction material"
+      description: "Basic construction material"
+      base_price: 10.0
+      spoilage_rate: 0.01
+      is_storable: true
+    - name: "lead"
+      description: "Raw heavy metal for munitions"
+      base_price: 15.0
+      spoilage_rate: 0.005
+      is_storable: true
     - name: "iron"
-      description: "Material for arms and equipment"
+      description: "Raw metal for steel production"
+      base_price: 20.0
+      spoilage_rate: 0.005
+      is_storable: true
+    - name: "steel"
+      description: "Refined metal for advanced structures and military"
+      base_price: 45.0
+      spoilage_rate: 0.002
+      is_storable: true
+    - name: "coal"
+      description: "Fuel for energy and metallurgy"
+      base_price: 12.0
+      spoilage_rate: 0.01
+      is_storable: true
+    - name: "oil"
+      description: "Unrefined fossil fuel"
+      base_price: 30.0
+      spoilage_rate: 0.01
+      is_storable: true
+    - name: "gasoline"
+      description: "Refined fuel for military and transport"
+      base_price: 60.0
+      spoilage_rate: 0.02
+      is_storable: true
+    - name: "aluminum"
+      description: "Lightweight metal for advanced hardware"
+      base_price: 40.0
+      spoilage_rate: 0.002
+      is_storable: true
+    - name: "munitions"
+      description: "Ammunition and explosives"
+      base_price: 50.0
+      spoilage_rate: 0.01
+      is_storable: true
+    - name: "uranium"
+      description: "Fissile heavy metal for nuclear tech"
+      base_price: 200.0
+      spoilage_rate: 0.001
+      is_storable: true
+    - name: "plutonium"
+      description: "Weapon-grade radioactive isotope"
+      base_price: 500.0
+      spoilage_rate: 0.001
+      is_storable: true
+    - name: "research_points"
+      description: "Abstract points for scientific breakthroughs"
+      base_price: 100.0
+      spoilage_rate: 0.0
+      is_storable: false
