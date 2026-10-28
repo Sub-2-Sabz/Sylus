@@ -45,6 +45,8 @@ class Nation(Base):
     provinces: Mapped[list["Province"]] = relationship("Province", back_populates="nation", cascade="all, delete-orphan")
     resources: Mapped[list["ResourceLedger"]] = relationship("ResourceLedger", back_populates="nation", cascade="all, delete-orphan")
     buildings: Mapped[list["Building"]] = relationship("Building", back_populates="nation", cascade="all, delete-orphan")
+    unlocked_techs: Mapped[list["NationTech"]] = relationship("NationTech", back_populates="nation", cascade="all, delete-orphan")
+    research_queue: Mapped[list["ResearchQueue"]] = relationship("ResearchQueue", back_populates="nation", cascade="all, delete-orphan")
 
 class Province(Base):
     __tablename__ = "provinces"
@@ -110,3 +112,39 @@ class AuditLog(Base):
     actor_id: Mapped[Optional[int]] = mapped_column(BigInteger, nullable=True)
     details: Mapped[Optional[dict[str, Any]]] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+class NationTech(Base):
+    __tablename__ = "nation_techs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    tech_id: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    unlocked_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    nation: Mapped["Nation"] = relationship("Nation", back_populates="unlocked_techs")
+
+class ResearchQueue(Base):
+    __tablename__ = "research_queues"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    tech_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    allocated_rp: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    target_rp: Mapped[float] = mapped_column(Float, nullable=False)
+    queue_position: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    nation: Mapped["Nation"] = relationship("Nation", back_populates="research_queue")
+
+class TechLicense(Base):
+    __tablename__ = "tech_licenses"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    licensor_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    licensee_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    tech_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    royalty_per_turn: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    licensor: Mapped["Nation"] = relationship("Nation", foreign_keys=[licensor_id])
+    licensee: Mapped["Nation"] = relationship("Nation", foreign_keys=[licensee_id])
