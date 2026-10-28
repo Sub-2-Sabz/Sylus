@@ -3,3 +3,7 @@ game:
   name: "Sylus"
   turn_duration_hours: 24
   default_starting_gold: 1000
+bot:
+  reconnect_initial_backoff: 5
+  reconnect_max_backoff: 300
+  reconnect_backoff_factor: 2

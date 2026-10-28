@@ -63,7 +63,8 @@ class Config:
 
     @property
     def http_port(self) -> int:
-        return int(os.getenv("HTTP_PORT", "8080"))
+        port_env = os.getenv("PORT") or os.getenv("HTTP_PORT") or "8080"
+        return int(port_env)
 
     @property
     def log_level(self) -> str:
