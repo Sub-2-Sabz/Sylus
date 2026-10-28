@@ -1,0 +1,6 @@
+trade:
+  default_offer_duration_turns: 12
+  marketplace_fee_percent: 0.02
+  price_history_limit_turns: 48
+  min_offer_amount: 1.0
+  min_price: 0.01

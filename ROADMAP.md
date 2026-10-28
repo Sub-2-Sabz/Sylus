@@ -59,11 +59,24 @@
 - [x] Per-turn research progression allocating RP from resource ledger, auto-unlocking completed techs, and processing license royalties.
 - [x] `/research` slash command cog (`tree`, `queue`, `cancel`, `status`, `license`) with visual progress-bar view (`[██████░░░░] 60%`) and tree filtering.
 
-## Phase 7: Trading & Contracts (Unfinished / Future)
-- [ ] Player-to-player trade agreement proposals and marketplace.
-- [ ] Automated contract enforcement and escrow.
+## Phase 7: Trading & Contracts (Completed)
+- [x] Direct trade proposals with escrow locking (`/trade offer`, `/trade cancel`, `/trade counter`).
+- [x] Public marketplace with buy and sell orders (`/trade market_list`, `/trade market_sell`, `/trade market_buy`, `/trade fill`).
+- [x] Partial fills, order expirations, and price history tracking (`/trade price_history`).
+- [x] Support for all tradable assets: resources, military units, model blueprints, provinces, and tech licenses.
+- [x] Full contract system (`/contract create`, `/contract info`, `/contract sign`, `/contract appeal`, `/contract reputation`).
+- [x] All 11 contract types supported with plain-language summaries, duration, obligations, breach conditions, and stated penalties.
+- [x] Persistent Py-cord UI views with explicit `custom_id` buttons (`TradePersistentView`, `ContractSignView`) that survive bot restarts.
+- [x] Immutable contract storage upon activation (once signed by all parties).
+- [x] Automated per-turn contract obligation execution and breach detection with appeal window.
+- [x] Admin appeal resolution override (`/admin contract_override`).
+- [x] Nation contract fulfillment reputation scoring system.
+- [x] Strict balance validation preventing negative balances across all trades, escrow holds, and obligations.
 
-## Phase 8: Military, Warfare & Covert Ops (Unfinished / Future)
+## Phase 8: Diplomacy & Blocs (Unfinished / Future)
+- [ ] Alliances, blocs, shared treasuries, auto-created channels, embargoes, UN-style votes.
+
+## Phase 9: Military, Warfare & Covert Ops (Unfinished / Future)
 - [ ] Component-based unit designer and production queues.
 - [ ] War system with terrain, weather, morale, occupation, peace treaties, and nukes.
 - [ ] Espionage and covert ops.

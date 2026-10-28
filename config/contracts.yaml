@@ -1,0 +1,28 @@
+contracts:
+  default_duration_turns: 24
+  appeal_window_turns: 3
+  reputation:
+    initial_score: 100.0
+    fulfillment_bonus: 5.0
+    breach_penalty: 25.0
+    min_score: 0.0
+    max_score: 200.0
+  penalty_types:
+    - fine
+    - asset_seizure
+    - tariff
+    - sanction
+    - temporary_ban
+    - permanent_ban
+  contract_types:
+    - trade_agreement
+    - non_aggression_pact
+    - defense_pact
+    - alliance
+    - military_aid
+    - loan_debt
+    - tech_sharing
+    - resource_supply
+    - tribute_vassalage
+    - peace_treaty
+    - custom

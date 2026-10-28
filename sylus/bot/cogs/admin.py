@@ -6,6 +6,7 @@ from discord.commands import SlashCommandGroup
 
 from sylus.db.base import get_session
 from sylus.engine.turn import get_or_create_global_state, export_snapshot, restore_snapshot
+from sylus.services.contract import admin_resolve_appeal
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)
@@ -70,6 +71,24 @@ class AdminCog(commands.Cog):
                 await ctx.respond(f"⚡ Forced Turn **{result.turn_number}** executed successfully.")
                 return
         await ctx.respond("❌ Failed to execute forced turn or turn scheduler unavailable.")
+
+    @admin_group.command(name="contract_override", description="Admin override resolution for contract appeals")
+    async def contract_override(
+        self,
+        ctx: discord.ApplicationContext,
+        appeal_id: int = discord.Option(int, "Appeal ID"),
+        uphold: bool = discord.Option(bool, "Uphold appeal (True) or reject (False)"),
+        notes: str = discord.Option(str, "Admin arbitration notes", default=""),
+    ):
+        await ctx.defer(ephemeral=True)
+        async with get_session() as session:
+            try:
+                c = await admin_resolve_appeal(session, appeal_id, ctx.author.id, uphold, notes)
+                await session.commit()
+                status_str = "UPHELD (Contract restored to active)" if uphold else "REJECTED (Penalty enforced)"
+                await ctx.respond(f"⚖️ Resolved Appeal **#{appeal_id}**: `{status_str}` for Contract **#{c.id}**.", ephemeral=True)
+            except Exception as e:
+                await ctx.respond(f"⚠️ Appeal override failed: {e}", ephemeral=True)
 
     @admin_group.command(name="backup", description="Create and export database snapshot")
     async def backup(self, ctx: discord.ApplicationContext):

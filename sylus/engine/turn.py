@@ -12,6 +12,8 @@ from sylus.db.models import GlobalState, Nation, Province, ResourceLedger, Audit
 from sylus.map.renderer import MapRenderer, ASSETS_DIR
 from sylus.engine.economy import process_economy_turn
 from sylus.services.research import process_research_turn
+from sylus.services.trade import process_trade_turn
+from sylus.services.contract import process_contract_turn
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)
@@ -104,12 +106,23 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
     # Process research progression & licenses
     await process_research_turn(session)
 
+    # Process trade offer expirations
+    expired_trades_count = await process_trade_turn(session, current_turn)
+
+    # Process contract obligations & automated enforcement
+    contract_summary = await process_contract_turn(session, current_turn)
+
     # Record turn audit log entry
     audit = AuditLog(
         action_type="turn_processed",
         entity_type="global_state",
         entity_id=state_id,
-        details={"processed_turn": current_turn, "new_turn": current_turn + 1},
+        details={
+            "processed_turn": current_turn,
+            "new_turn": current_turn + 1,
+            "expired_trades": expired_trades_count,
+            "contract_summary": contract_summary,
+        },
         created_at=now,
     )
     session.add(audit)
@@ -125,6 +138,7 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
         "fields": [
             {"name": "Completed Turn", "value": str(current_turn), "inline": True},
             {"name": "Next Turn At", "value": new_next_turn.strftime("%Y-%m-%d %H:%M:%S UTC"), "inline": True},
+            {"name": "Contracts Processed", "value": f"Executed: {contract_summary['executed']}, Breached: {contract_summary['breached']}", "inline": True},
         ],
         "timestamp": now.isoformat(),
     }
