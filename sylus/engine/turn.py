@@ -11,6 +11,7 @@ from sylus.config import config
 from sylus.db.models import GlobalState, Nation, Province, ResourceLedger, AuditLog, utc_now
 from sylus.map.renderer import MapRenderer, ASSETS_DIR
 from sylus.engine.economy import process_economy_turn
+from sylus.services.research import process_research_turn
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)
@@ -99,6 +100,9 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
 
     # Process turn economy
     await process_economy_turn(session)
+
+    # Process research progression & licenses
+    await process_research_turn(session)
 
     # Record turn audit log entry
     audit = AuditLog(

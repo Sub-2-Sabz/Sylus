@@ -1,0 +1,131 @@
+research:
+  settings:
+    progress_bar_length: 10
+    filled_char: "█"
+    empty_char: "░"
+    base_rp_per_center: 50.0
+
+  trees:
+    military:
+      name: "Military"
+      description: "Component-based military systems, weapons, armor, and sensor developments."
+      components:
+        engines:
+          name: "Engine Systems"
+          levels:
+            1: { name: "Piston Engine L1", rp_cost: 100, prereqs: [] }
+            2: { name: "Turboprop Engine L2", rp_cost: 250, prereqs: ["mil_engines_1"] }
+            3: { name: "Jet Engine L3", rp_cost: 600, prereqs: ["mil_engines_2"] }
+        armor:
+          name: "Armor & Protection"
+          levels:
+            1: { name: "Steel Plating L1", rp_cost: 100, prereqs: [] }
+            2: { name: "Composite Armor L2", rp_cost: 300, prereqs: ["mil_armor_1"] }
+            3: { name: "Reactive Armor L3", rp_cost: 700, prereqs: ["mil_armor_2"] }
+        guns:
+          name: "Small Arms & Infantry Guns"
+          levels:
+            1: { name: "Standard Rifle L1", rp_cost: 80, prereqs: [] }
+            2: { name: "Advanced Assault Rifle L2", rp_cost: 200, prereqs: ["mil_guns_1"] }
+            3: { name: "Modular Weaponry L3", rp_cost: 500, prereqs: ["mil_guns_2"] }
+        cannons:
+          name: "Heavy Cannons & Artillery"
+          levels:
+            1: { name: "Smoothbore Cannon L1", rp_cost: 120, prereqs: [] }
+            2: { name: "Rifled Cannon L2", rp_cost: 350, prereqs: ["mil_cannons_1"] }
+            3: { name: "Auto-loading Artillery L3", rp_cost: 800, prereqs: ["mil_cannons_2"] }
+        radar:
+          name: "Radar & Detection"
+          levels:
+            1: { name: "Early Warning Radar L1", rp_cost: 150, prereqs: [] }
+            2: { name: "Phased Array Radar L2", rp_cost: 400, prereqs: ["mil_radar_1"] }
+            3: { name: "AESA Radar L3", rp_cost: 900, prereqs: ["mil_radar_2"] }
+        missiles:
+          name: "Guided Missiles"
+          levels:
+            1: { name: "Unguided Rockets L1", rp_cost: 180, prereqs: [] }
+            2: { name: "IR Guided Missiles L2", rp_cost: 450, prereqs: ["mil_missiles_1", "mil_radar_1"] }
+            3: { name: "Radar Guided Cruise Missiles L3", rp_cost: 1000, prereqs: ["mil_missiles_2", "mil_radar_2"] }
+        avionics:
+          name: "Flight Avionics"
+          levels:
+            1: { name: "Basic Flight Instruments L1", rp_cost: 120, prereqs: [] }
+            2: { name: "Digital Cockpit Avionics L2", rp_cost: 350, prereqs: ["mil_avionics_1"] }
+            3: { name: "Fly-by-Wire Flight Control L3", rp_cost: 850, prereqs: ["mil_avionics_2", "mil_radar_2"] }
+        hulls:
+          name: "Naval & Vehicle Hulls"
+          levels:
+            1: { name: "Riveted Steel Hull L1", rp_cost: 150, prereqs: [] }
+            2: { name: "Welded Monocoque Hull L2", rp_cost: 400, prereqs: ["mil_hulls_1"] }
+            3: { name: "Stealth Composite Hull L3", rp_cost: 950, prereqs: ["mil_hulls_2", "mil_armor_2"] }
+        sonar:
+          name: "Submarine & Surface Sonar"
+          levels:
+            1: { name: "Passive Echo Sonar L1", rp_cost: 130, prereqs: [] }
+            2: { name: "Active Towed Sonar Array L2", rp_cost: 380, prereqs: ["mil_sonar_1"] }
+            3: { name: "Digital Multi-beam Sonar L3", rp_cost: 800, prereqs: ["mil_sonar_2"] }
+        propulsion:
+          name: "Naval & Aerospace Propulsion"
+          levels:
+            1: { name: "Diesel Engine Propulsion L1", rp_cost: 140, prereqs: [] }
+            2: { name: "Gas Turbine Propulsion L2", rp_cost: 420, prereqs: ["mil_propulsion_1", "mil_engines_2"] }
+            3: { name: "Nuclear Marine Propulsion L3", rp_cost: 1200, prereqs: ["mil_propulsion_2", "energy_fission_1"] }
+        countermeasures:
+          name: "Defensive Countermeasures"
+          levels:
+            1: { name: "Chaff & Flare Dispenser L1", rp_cost: 110, prereqs: [] }
+            2: { name: "Electronic Jamming L2", rp_cost: 360, prereqs: ["mil_countermeasures_1", "mil_radar_1"] }
+            3: { name: "Laser Warning & APS L3", rp_cost: 850, prereqs: ["mil_countermeasures_2", "mil_radar_2"] }
+
+    economy:
+      name: "Economy"
+      description: "Financial structures, trade efficiency, and market regulation."
+      techs:
+        eco_banking_1: { name: "Central Banking", rp_cost: 150, prereqs: [], description: "Increases tax efficiency and treasury capacity." }
+        eco_banking_2: { name: "Fractional Reserve Banking", rp_cost: 400, prereqs: ["eco_banking_1"], description: "Boosts commerce income from markets." }
+        eco_trade_1: { name: "Mercantile Treaties", rp_cost: 200, prereqs: [], description: "Reduces trade tariffs and boosts export value." }
+        eco_trade_2: { name: "Global Supply Chain", rp_cost: 500, prereqs: ["eco_trade_1"], description: "Increases max storage capacity and reduces spoilage." }
+
+    community:
+      name: "Community"
+      description: "Social welfare, healthcare, education, and public infrastructure."
+      techs:
+        com_health_1: { name: "Public Sanitation", rp_cost: 100, prereqs: [], description: "Improves nation health and base population growth." }
+        com_health_2: { name: "Universal Healthcare", rp_cost: 350, prereqs: ["com_health_1"], description: "Significantly boosts happiness and disease resistance." }
+        com_edu_1: { name: "Public Schools", rp_cost: 150, prereqs: [], description: "Increases education level and workforce productivity." }
+        com_edu_2: { name: "Research Universities", rp_cost: 450, prereqs: ["com_edu_1"], description: "Increases research point yields from research centers." }
+
+    industry:
+      name: "Industry"
+      description: "Manufacturing efficiency, automation, and material processing."
+      techs:
+        ind_auto_1: { name: "Assembly Line Production", rp_cost: 200, prereqs: [], description: "Increases factory production efficiency by 15%." }
+        ind_auto_2: { name: "Robotic Automation", rp_cost: 600, prereqs: ["ind_auto_1"], description: "Decreases building construction turns by 1." }
+        ind_mat_1: { name: "Advanced Metallurgy", rp_cost: 250, prereqs: [], description: "Increases steel and aluminum smelter yields." }
+        ind_mat_2: { name: "Synthetic Materials", rp_cost: 650, prereqs: ["ind_mat_1"], description: "Reduces resource inputs required for heavy production." }
+
+    energy:
+      name: "Energy"
+      description: "Power generation, grid management, and nuclear fission."
+      techs:
+        energy_grid_1: { name: "Electrical Power Grid", rp_cost: 180, prereqs: [], description: "Provides grid power to industrial facilities." }
+        energy_grid_2: { name: "Smart Grid Optimization", rp_cost: 450, prereqs: ["energy_grid_1"], description: "Reduces building energy upkeep costs." }
+        energy_fission_1: { name: "Nuclear Fission Power", rp_cost: 1000, prereqs: ["energy_grid_1"], description: "Unlocks nuclear reactors and nuclear marine propulsion." }
+        energy_fission_2: { name: "Breeder Reactors", rp_cost: 2000, prereqs: ["energy_fission_1"], description: "Produces plutonium isotopes for advanced applications." }
+
+    espionage:
+      name: "Espionage"
+      description: "Intelligence gathering, covert operations, and counter-surveillance."
+      techs:
+        esp_intel_1: { name: "Cipher & Cryptography", rp_cost: 200, prereqs: [], description: "Improves spy network offense and defense." }
+        esp_intel_2: { name: "Signals Intelligence", rp_cost: 500, prereqs: ["esp_intel_1"], description: "Unlocks detailed enemy military force inspection." }
+        esp_covert_1: { name: "Covert Sabotage", rp_cost: 350, prereqs: ["esp_intel_1"], description: "Enables covert sabotage of enemy industrial buildings." }
+
+    space_nuclear:
+      name: "Space & Nuclear"
+      description: "Rocketry, satellite launch, strategic weapons, and nuclear delivery."
+      techs:
+        space_rocket_1: { name: "Sounding Rockets", rp_cost: 500, prereqs: ["mil_engines_2"], description: "Initial steps into high-altitude rocketry." }
+        space_rocket_2: { name: "Orbital Launch Capability", rp_cost: 1500, prereqs: ["space_rocket_1", "mil_missiles_2"], description: "Unlocks space program projects and satellites." }
+        nuke_warhead_1: { name: "Fission Warheads", rp_cost: 2500, prereqs: ["energy_fission_1", "space_rocket_1"], description: "Unlocks strategic nuclear warheads." }
+        nuke_warhead_2: { name: "Thermonuclear Warheads", rp_cost: 5000, prereqs: ["nuke_warhead_1"], description: "High-yield hydrogen bomb capability." }

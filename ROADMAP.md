@@ -52,9 +52,12 @@
 - [x] `/nation` dashboards (`info`, `stats`, `economy`, `provinces` with paginated view, `policy`, `build`).
 - [x] Externalized all game balance parameters to `/config/*.yaml`.
 
-## Phase 6: Research (Unfinished / Future)
-- [ ] Tech trees (Military, Economy, Community, Industry, Energy, Espionage, Space/Nuclear).
-- [ ] Research points generation and technology unlocking.
+## Phase 6: Research (Completed)
+- [x] Tech trees configured in `/config/research.yaml` (Military, Economy, Community, Industry, Energy, Espionage, Space/Nuclear).
+- [x] Component-based military tree (engines, armor, guns, cannons, radar, missiles, avionics, hulls, sonar, propulsion, countermeasures) with levels and prerequisites.
+- [x] Database models (`NationTech`, `ResearchQueue`, `TechLicense`) and research service (`sylus/services/research.py`).
+- [x] Per-turn research progression allocating RP from resource ledger, auto-unlocking completed techs, and processing license royalties.
+- [x] `/research` slash command cog (`tree`, `queue`, `cancel`, `status`, `license`) with visual progress-bar view (`[██████░░░░] 60%`) and tree filtering.
 
 ## Phase 7: Trading & Contracts (Unfinished / Future)
 - [ ] Player-to-player trade agreement proposals and marketplace.
