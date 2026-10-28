@@ -1,0 +1,9 @@
+# Sylus Balance Configuration
+balance:
+  tax_rate_default: 0.10
+  upkeep_per_province: 50
+  starting_resources:
+    gold: 1000
+    food: 500
+    wood: 200
+    iron: 100
