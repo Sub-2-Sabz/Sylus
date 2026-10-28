@@ -1,0 +1,338 @@
+{
+  "2": {
+    "id": 2,
+    "name": "Province 2",
+    "country": "Region 1",
+    "terrain": "forest",
+    "climate": "tropical",
+    "deposits": {
+      "gold": 20,
+      "iron": 10
+    },
+    "population_capacity": 110000,
+    "capital_coords": [
+      255,
+      51
+    ]
+  },
+  "4": {
+    "id": 4,
+    "name": "Province 4",
+    "country": "Region 1",
+    "terrain": "desert",
+    "climate": "continental",
+    "deposits": {
+      "gold": 40,
+      "iron": 20
+    },
+    "population_capacity": 120000,
+    "capital_coords": [
+      595,
+      51
+    ]
+  },
+  "6": {
+    "id": 6,
+    "name": "Province 6",
+    "country": "Region 2",
+    "terrain": "coastal",
+    "climate": "temperate",
+    "deposits": {
+      "gold": 60,
+      "iron": 30
+    },
+    "population_capacity": 130000,
+    "capital_coords": [
+      935,
+      51
+    ]
+  },
+  "7": {
+    "id": 7,
+    "name": "Province 7",
+    "country": "Region 2",
+    "terrain": "urban",
+    "climate": "tropical",
+    "deposits": {
+      "gold": 70,
+      "iron": 35
+    },
+    "population_capacity": 135000,
+    "capital_coords": [
+      85,
+      153
+    ]
+  },
+  "8": {
+    "id": 8,
+    "name": "Province 8",
+    "country": "Region 2",
+    "terrain": "arctic",
+    "climate": "arid",
+    "deposits": {
+      "gold": 80,
+      "iron": 40
+    },
+    "population_capacity": 140000,
+    "capital_coords": [
+      255,
+      153
+    ]
+  },
+  "9": {
+    "id": 9,
+    "name": "Province 9",
+    "country": "Region 2",
+    "terrain": "plains",
+    "climate": "continental",
+    "deposits": {
+      "gold": 90,
+      "iron": 45
+    },
+    "population_capacity": 145000,
+    "capital_coords": [
+      425,
+      153
+    ]
+  },
+  "10": {
+    "id": 10,
+    "name": "Province 10",
+    "country": "Region 2",
+    "terrain": "forest",
+    "climate": "polar",
+    "deposits": {
+      "gold": 100,
+      "iron": 50
+    },
+    "population_capacity": 150000,
+    "capital_coords": [
+      595,
+      153
+    ]
+  },
+  "11": {
+    "id": 11,
+    "name": "Province 11",
+    "country": "Region 3",
+    "terrain": "mountain",
+    "climate": "temperate",
+    "deposits": {
+      "gold": 110,
+      "iron": 55
+    },
+    "population_capacity": 155000,
+    "capital_coords": [
+      765,
+      153
+    ]
+  },
+  "14": {
+    "id": 14,
+    "name": "Province 14",
+    "country": "Region 3",
+    "terrain": "coastal",
+    "climate": "continental",
+    "deposits": {
+      "gold": 140,
+      "iron": 70
+    },
+    "population_capacity": 170000,
+    "capital_coords": [
+      255,
+      255
+    ]
+  },
+  "15": {
+    "id": 15,
+    "name": "Province 15",
+    "country": "Region 3",
+    "terrain": "urban",
+    "climate": "polar",
+    "deposits": {
+      "gold": 150,
+      "iron": 75
+    },
+    "population_capacity": 175000,
+    "capital_coords": [
+      425,
+      255
+    ]
+  },
+  "16": {
+    "id": 16,
+    "name": "Province 16",
+    "country": "Region 4",
+    "terrain": "arctic",
+    "climate": "temperate",
+    "deposits": {
+      "gold": 160,
+      "iron": 80
+    },
+    "population_capacity": 180000,
+    "capital_coords": [
+      595,
+      255
+    ]
+  },
+  "17": {
+    "id": 17,
+    "name": "Province 17",
+    "country": "Region 4",
+    "terrain": "plains",
+    "climate": "tropical",
+    "deposits": {
+      "gold": 170,
+      "iron": 85
+    },
+    "population_capacity": 185000,
+    "capital_coords": [
+      765,
+      255
+    ]
+  },
+  "18": {
+    "id": 18,
+    "name": "Province 18",
+    "country": "Region 4",
+    "terrain": "forest",
+    "climate": "arid",
+    "deposits": {
+      "gold": 180,
+      "iron": 90
+    },
+    "population_capacity": 190000,
+    "capital_coords": [
+      935,
+      255
+    ]
+  },
+  "19": {
+    "id": 19,
+    "name": "Province 19",
+    "country": "Region 4",
+    "terrain": "mountain",
+    "climate": "continental",
+    "deposits": {
+      "gold": 190,
+      "iron": 95
+    },
+    "population_capacity": 195000,
+    "capital_coords": [
+      85,
+      357
+    ]
+  },
+  "20": {
+    "id": 20,
+    "name": "Province 20",
+    "country": "Region 4",
+    "terrain": "desert",
+    "climate": "polar",
+    "deposits": {
+      "gold": 200,
+      "iron": 100
+    },
+    "population_capacity": 200000,
+    "capital_coords": [
+      255,
+      357
+    ]
+  },
+  "21": {
+    "id": 21,
+    "name": "Province 21",
+    "country": "Region 5",
+    "terrain": "jungle",
+    "climate": "temperate",
+    "deposits": {
+      "gold": 210,
+      "iron": 105
+    },
+    "population_capacity": 205000,
+    "capital_coords": [
+      425,
+      357
+    ]
+  },
+  "22": {
+    "id": 22,
+    "name": "Province 22",
+    "country": "Region 5",
+    "terrain": "coastal",
+    "climate": "tropical",
+    "deposits": {
+      "gold": 220,
+      "iron": 110
+    },
+    "population_capacity": 210000,
+    "capital_coords": [
+      595,
+      357
+    ]
+  },
+  "23": {
+    "id": 23,
+    "name": "Province 23",
+    "country": "Region 5",
+    "terrain": "urban",
+    "climate": "arid",
+    "deposits": {
+      "gold": 230,
+      "iron": 115
+    },
+    "population_capacity": 215000,
+    "capital_coords": [
+      765,
+      357
+    ]
+  },
+  "26": {
+    "id": 26,
+    "name": "Province 26",
+    "country": "Region 6",
+    "terrain": "forest",
+    "climate": "temperate",
+    "deposits": {
+      "gold": 260,
+      "iron": 130
+    },
+    "population_capacity": 230000,
+    "capital_coords": [
+      255,
+      459
+    ]
+  },
+  "28": {
+    "id": 28,
+    "name": "Province 28",
+    "country": "Region 6",
+    "terrain": "desert",
+    "climate": "arid",
+    "deposits": {
+      "gold": 280,
+      "iron": 140
+    },
+    "population_capacity": 240000,
+    "capital_coords": [
+      595,
+      459
+    ]
+  },
+  "30": {
+    "id": 30,
+    "name": "Province 30",
+    "country": "Region 6",
+    "terrain": "coastal",
+    "climate": "polar",
+    "deposits": {
+      "gold": 300,
+      "iron": 150
+    },
+    "population_capacity": 250000,
+    "capital_coords": [
+      935,
+      459
+    ]
+  }
+}

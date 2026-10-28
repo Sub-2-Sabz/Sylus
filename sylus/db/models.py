@@ -22,6 +22,7 @@ class Nation(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False, index=True)
     discord_user_id: Mapped[int] = mapped_column(BigInteger, unique=True, nullable=False, index=True)
+    color: Mapped[Optional[str]] = mapped_column(String(20), default="#00FF00", nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
 
@@ -35,6 +36,7 @@ class Province(Base):
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     nation_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("nations.id", ondelete="SET NULL"), nullable=True, index=True)
     terrain: Mapped[str] = mapped_column(String(50), default="plains", nullable=False)
+    is_capital: Mapped[bool] = mapped_column(default=False, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
 
