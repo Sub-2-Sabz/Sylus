@@ -1,0 +1,35 @@
+# Sylus Map Configuration
+map:
+  canvas_width: 1024
+  canvas_height: 512
+  assets_dir: "sylus/assets/world"
+  cache_max_size: 32
+  output_format: "PNG"
+
+  default_colors:
+    ocean: [30, 40, 60]
+    unclaimed_land: [180, 180, 180]
+    border: [30, 30, 30]
+    text: [255, 255, 255]
+    legend_bg: [20, 20, 25]
+
+  terrain_colors:
+    plains: [144, 215, 110]
+    forest: [45, 120, 55]
+    mountain: [140, 130, 120]
+    desert: [235, 210, 140]
+    jungle: [20, 90, 40]
+    arctic: [230, 240, 250]
+    urban: [160, 160, 170]
+    coastal: [100, 180, 220]
+
+  capital_marker:
+    radius: 5
+    fill_color: [255, 215, 0]
+    outline_color: [0, 0, 0]
+
+  legend:
+    padding: 10
+    item_height: 20
+    box_size: 14
+    margin: 15

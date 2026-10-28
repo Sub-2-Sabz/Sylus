@@ -22,23 +22,30 @@
 - [x] Comprehensive phone-friendly deployment setup guide and Section 15.6 troubleshooting table in root `README.md`.
 - [x] Unit tests for `/health` (GET and HEAD) and Cloudflare Worker config/script structure.
 
-## Phase 3: Nation & Territory Management (Unfinished / Future)
+## Phase 3: World Assets & Map Rendering (Completed)
+- [x] Build script `scripts/build_world.py` converting Natural Earth admin-1 data or synthetic fallback into small committed world assets (`province_raster.npz`, `border_overlay.png`, `provinces.json`, `adjacency.json`). Note: If internet or runtime GIS dependencies (GeoPandas/Shapely) are unavailable, `scripts/build_world.py` outputs a clear notice and commits a compact synthetic world asset set so tests and the bot run seamlessly.
+- [x] Runtime memory-safe map renderer (`sylus/map/renderer.py`) using NumPy palette recoloring and Pillow drawing (no runtime GeoPandas, Shapely, or Cartopy).
+- [x] Map slash command group `/map` (`world`, `terrain`, `province`).
+- [x] Map configuration (`config/map.yaml`) storing all rendering and palette balance variables.
+- [x] Unit test suite covering world building, map rendering, and `/map` slash commands (`tests/test_map.py`).
+
+## Phase 4: Nation & Territory Management (Unfinished / Future)
 - [ ] Nation registration slash command (`/register`).
 - [ ] Territory/province claiming logic and boundaries.
 - [ ] Resource income generation per turn.
 - [ ] Nation profile and status slash commands (`/nation status`).
 
-## Phase 4: Economic & Trade Ledger (Unfinished / Future)
+## Phase 5: Economic & Trade Ledger (Unfinished / Future)
 - [ ] Trade agreement proposal and execution between nations.
 - [ ] Market system and resource exchange.
 - [ ] Detailed resource ledger transaction logs.
 
-## Phase 5: Turn Engine & Automated Processing (Unfinished / Future)
+## Phase 6: Turn Engine & Automated Processing (Unfinished / Future)
 - [ ] Turn progression engine and background scheduler.
 - [ ] Event hooks for turn processing (upkeep, resource distribution, population growth).
 - [ ] Notification engine for Discord channel alerts on turn change.
 
-## Phase 6: Warfare & Diplomacy (Unfinished / Future)
+## Phase 7: Warfare & Diplomacy (Unfinished / Future)
 - [ ] Troop recruitment and army management.
 - [ ] Battle resolution system and casualties log.
 - [ ] Alliance and treaty system.
