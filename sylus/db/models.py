@@ -13,6 +13,10 @@ class GlobalState(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     turn_number: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     next_turn_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    is_paused: Mapped[bool] = mapped_column(default=False, nullable=False)
+    map_channel_id: Mapped[Optional[int]] = mapped_column(BigInteger, nullable=True)
+    backup_channel_id: Mapped[Optional[int]] = mapped_column(BigInteger, nullable=True)
+    snapshot_interval_turns: Mapped[int] = mapped_column(Integer, default=5, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
 

@@ -1,8 +1,14 @@
 # Sylus Game Settings Configuration
 game:
   name: "Sylus"
-  turn_duration_hours: 24
+  turn_duration_hours: 2
+  turn_duration_seconds: 7200
+  snapshot_interval_turns: 5
   default_starting_gold: 1000
+turn_engine:
+  turn_duration_seconds: 7200
+  snapshot_interval_turns: 5
+  max_catchup_turns: 50
 bot:
   reconnect_initial_backoff: 5
   reconnect_max_backoff: 300
