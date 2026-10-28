@@ -3,9 +3,11 @@ import pytest_asyncio
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sylus.db.base import Base
 
+
 @pytest_asyncio.fixture
-async def async_engine(monkeypatch):
-    engine = create_async_engine("sqlite+aiosqlite:///:memory:", echo=False)
+async def async_engine(tmp_path, monkeypatch):
+    db_file = tmp_path / "test_sylus.db"
+    engine = create_async_engine(f"sqlite+aiosqlite:///{db_file}", echo=False)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
@@ -15,6 +17,7 @@ async def async_engine(monkeypatch):
 
     yield engine
     await engine.dispose()
+
 
 @pytest_asyncio.fixture
 async def db_session(async_engine):

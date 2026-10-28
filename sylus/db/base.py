@@ -30,6 +30,10 @@ def get_session_factory(engine: AsyncEngine | None = None) -> async_sessionmaker
         _sessionmaker = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
     return _sessionmaker
 
+def get_session() -> AsyncSession:
+    factory = get_session_factory()
+    return factory()
+
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
     session_factory = get_session_factory()
     async with session_factory() as session:

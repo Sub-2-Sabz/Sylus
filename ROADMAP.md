@@ -29,23 +29,29 @@
 - [x] Map configuration (`config/map.yaml`) storing all rendering and palette balance variables.
 - [x] Unit test suite covering world building, map rendering, and `/map` slash commands (`tests/test_map.py`).
 
-## Phase 4: Nation & Territory Management (Unfinished / Future)
-- [ ] Nation registration slash command (`/register`).
-- [ ] Territory/province claiming logic and boundaries.
-- [ ] Resource income generation per turn.
-- [ ] Nation profile and status slash commands (`/nation status`).
+## Phase 4: Turn Engine & Automated Processing (Completed)
+- [x] In-memory `next_turn_at` timer with no database polling loops (`sylus/engine/scheduler.py`).
+- [x] Idempotent turn processing using compare-and-set (CAS) on `turn_number` (`sylus/engine/turn.py`).
+- [x] Sequential catch-up of overdue turns in order on startup or wake.
+- [x] Per-turn map post and summary embed generator.
+- [x] Full database snapshot export and state restoration service.
+- [x] Admin slash commands cog `/admin` (`channels set_map`, `channels set_backup`, `pause`, `resume`, `force_turn`, `backup`, `restore`).
+- [x] Fast-forward CLI tool (`python -m sylus.cli fast-forward --turns N`).
+- [x] Unit test suite (`tests/test_turn_engine.py`) covering mid-turn crash rollback, overlapping instances, 5 overdue turns catch-up, no duplicate turns, snapshot export/restore, pause/resume, and CLI fast-forward.
 
-## Phase 5: Economic & Trade Ledger (Unfinished / Future)
+## Phase 5: Nations & Economy (Unfinished / Future)
+- [ ] Nation registration slash command (`/nation create`).
+- [ ] Territory/province claiming logic and boundaries.
+- [ ] Building production chains, upkeep, storage, and resource income generation per turn.
+- [ ] Tax rates, happiness/stability, and national policies.
+- [ ] Nation profile and status slash commands (`/nation info`).
+
+## Phase 6: Trading & Contracts (Unfinished / Future)
 - [ ] Trade agreement proposal and execution between nations.
 - [ ] Market system and resource exchange.
-- [ ] Detailed resource ledger transaction logs.
+- [ ] Automated contract enforcement and escrow.
 
-## Phase 6: Turn Engine & Automated Processing (Unfinished / Future)
-- [ ] Turn progression engine and background scheduler.
-- [ ] Event hooks for turn processing (upkeep, resource distribution, population growth).
-- [ ] Notification engine for Discord channel alerts on turn change.
-
-## Phase 7: Warfare & Diplomacy (Unfinished / Future)
-- [ ] Troop recruitment and army management.
-- [ ] Battle resolution system and casualties log.
-- [ ] Alliance and treaty system.
+## Phase 7: Research, Warfare & Covert Ops (Unfinished / Future)
+- [ ] Research tech trees and component-based unit designer.
+- [ ] War system with terrain/weather modifiers, combat resolution, and peace treaties.
+- [ ] Espionage and covert ops.

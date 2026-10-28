@@ -56,6 +56,8 @@ async def start_bot_with_backoff(stop_event: asyncio.Event) -> None:
 
             if stop_event.is_set():
                 logger.info("Stop event received, closing Discord bot connection.")
+                if hasattr(bot, "turn_scheduler"):
+                    await bot.turn_scheduler.stop()
                 await bot.close()
                 break
 
@@ -67,6 +69,8 @@ async def start_bot_with_backoff(stop_event: asyncio.Event) -> None:
             current_backoff = initial_backoff
         except asyncio.CancelledError:
             logger.info("Bot execution cancelled.")
+            if hasattr(bot, "turn_scheduler"):
+                await bot.turn_scheduler.stop()
             await bot.close()
             break
         except Exception as exc:
@@ -75,6 +79,8 @@ async def start_bot_with_backoff(stop_event: asyncio.Event) -> None:
                 error=str(exc),
                 backoff_seconds=current_backoff,
             )
+            if hasattr(bot, "turn_scheduler"):
+                await bot.turn_scheduler.stop()
             await bot.close()
             try:
                 await asyncio.sleep(current_backoff)
