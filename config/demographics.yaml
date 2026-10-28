@@ -1,0 +1,58 @@
+# Sylus Demographics & Unrest Balance Configuration
+demographics:
+  defaults:
+    crime: 0.10
+    health: 0.80
+    education: 0.50
+    pollution: 0.05
+    corruption: 0.10
+    war_support: 0.70
+    worker_ratio: 0.70
+    soldier_ratio: 0.05
+    unemployed_ratio: 0.25
+
+  rates:
+    base_health_recovery: 0.02
+    health_pollution_impact: 0.10
+    education_growth: 0.01
+    crime_unemployment_impact: 0.20
+    crime_happiness_impact: 0.15
+    corruption_tax_impact: 0.10
+    corruption_education_mitigation: 0.05
+    pollution_decay_rate: 0.01
+
+  unrest_ladder:
+    thresholds:
+      protests: 0.60
+      riots: 0.40
+      civil_war: 0.20
+    civil_war_secession_chance: 0.50
+
+  player_responses:
+    reforms:
+      cost_money: 2000.0
+      happiness_bonus: 0.15
+      education_bonus: 0.10
+      health_bonus: 0.05
+      unrest_reduction: 1
+    concessions:
+      cost_money: 1000.0
+      happiness_bonus: 0.10
+      unrest_reduction: 1
+    police_control:
+      cost_money: 800.0
+      crime_reduction: 0.20
+      happiness_impact: -0.02
+      unrest_reduction: 1
+    propaganda:
+      cost_money: 500.0
+      war_support_bonus: 0.15
+      happiness_bonus: 0.05
+      unrest_reduction: 1
+    military_crackdown:
+      cost_money: 1500.0
+      pop_kill_percent: 0.02
+      health_impact: -0.05
+      happiness_impact: -0.10
+      corruption_increase: 0.05
+      force_reset_unrest: true

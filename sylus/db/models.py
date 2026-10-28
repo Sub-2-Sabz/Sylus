@@ -39,6 +39,16 @@ class Nation(Base):
     score: Mapped[float] = mapped_column(Float, default=100.0, nullable=False)
     active_policies: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
     policy_cooldowns: Mapped[dict[str, int]] = mapped_column(JSON, default=dict, nullable=False)
+    crime: Mapped[float] = mapped_column(Float, default=0.10, nullable=False)
+    health: Mapped[float] = mapped_column(Float, default=0.80, nullable=False)
+    education: Mapped[float] = mapped_column(Float, default=0.50, nullable=False)
+    pollution: Mapped[float] = mapped_column(Float, default=0.05, nullable=False)
+    corruption: Mapped[float] = mapped_column(Float, default=0.10, nullable=False)
+    war_support: Mapped[float] = mapped_column(Float, default=0.70, nullable=False)
+    unrest_level: Mapped[str] = mapped_column(String(50), default="normal", nullable=False)
+    workers: Mapped[int] = mapped_column(Integer, default=7000, nullable=False)
+    soldiers: Mapped[int] = mapped_column(Integer, default=500, nullable=False)
+    unemployed: Mapped[int] = mapped_column(Integer, default=2500, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
 
@@ -287,3 +297,29 @@ class ContractAppeal(Base):
     admin_notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     contract: Mapped["Contract"] = relationship("Contract", back_populates="appeals")
+
+class DisasterZone(Base):
+    __tablename__ = "disaster_zones"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    province_id: Mapped[int] = mapped_column(Integer, ForeignKey("provinces.id", ondelete="CASCADE"), nullable=False, index=True)
+    nation_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=True, index=True)
+    disaster_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    severity: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+    turns_remaining: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    created_at_turn: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+class NationEvent(Base):
+    __tablename__ = "nation_events"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    event_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    title: Mapped[str] = mapped_column(String(150), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    choices: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    status: Mapped[str] = mapped_column(String(30), default="pending", nullable=False)
+    chosen_option: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    created_at_turn: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)

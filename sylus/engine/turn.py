@@ -14,6 +14,10 @@ from sylus.engine.economy import process_economy_turn
 from sylus.services.research import process_research_turn
 from sylus.services.trade import process_trade_turn
 from sylus.services.contract import process_contract_turn
+from sylus.services.demographics import update_demographics_turn
+from sylus.services.disasters import process_disasters_turn
+from sylus.services.events import process_narrative_events_turn
+from sylus.db.models import DisasterZone
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)
@@ -112,6 +116,15 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
     # Process contract obligations & automated enforcement
     contract_summary = await process_contract_turn(session, current_turn)
 
+    # Process demographics and unrest ladder
+    unrest_summary = await update_demographics_turn(session)
+
+    # Process disasters and epidemic spread
+    disaster_summary = await process_disasters_turn(session, current_turn)
+
+    # Process narrative events
+    events_summary = await process_narrative_events_turn(session, current_turn)
+
     # Record turn audit log entry
     audit = AuditLog(
         action_type="turn_processed",
@@ -122,6 +135,9 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
             "new_turn": current_turn + 1,
             "expired_trades": expired_trades_count,
             "contract_summary": contract_summary,
+            "unrest_summary": unrest_summary,
+            "disaster_summary": disaster_summary,
+            "events_count": len(events_summary),
         },
         created_at=now,
     )
@@ -139,6 +155,8 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
             {"name": "Completed Turn", "value": str(current_turn), "inline": True},
             {"name": "Next Turn At", "value": new_next_turn.strftime("%Y-%m-%d %H:%M:%S UTC"), "inline": True},
             {"name": "Contracts Processed", "value": f"Executed: {contract_summary['executed']}, Breached: {contract_summary['breached']}", "inline": True},
+            {"name": "Unrest & Secessions", "value": f"Protests: {unrest_summary['protests']}, Riots: {unrest_summary['riots']}, Civil Wars: {unrest_summary['civil_wars']}, Secessions: {unrest_summary['secessions']}", "inline": False},
+            {"name": "Disasters", "value": f"New: {disaster_summary['new_disasters_count']}, Epidemic Spreads: {disaster_summary['epidemic_summary']['spread_count']}", "inline": False},
         ],
         "timestamp": now.isoformat(),
     }
@@ -180,7 +198,11 @@ async def _render_turn_map(session: AsyncSession) -> bytes:
                         rgb = (int(hex_col[0:2], 16), int(hex_col[2:4], 16), int(hex_col[4:6], 16))
                         nation_owners[p.id] = rgb
 
-        stream = renderer.render_map(nation_owners=nation_owners)
+        dz_res = await session.execute(select(DisasterZone))
+        dz_list = dz_res.scalars().all()
+        disaster_map = {dz.province_id: dz.disaster_type for dz in dz_list}
+
+        stream = renderer.render_map(nation_owners=nation_owners, disaster_zones=disaster_map)
         return stream.getvalue()
     except Exception as e:
         logger.warning("Failed to render turn map, returning empty image placeholder", error=str(e))

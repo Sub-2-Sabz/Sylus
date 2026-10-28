@@ -70,6 +70,7 @@ class MapRenderer:
         mode: str = "political",
         legend_title: str = "Sylus World Map",
         nation_names: Optional[Dict[Tuple[int, int, int], str]] = None,
+        disaster_zones: Optional[Dict[int, str]] = None,
     ) -> io.BytesIO:
         """Renders world map image and returns PNG BytesIO stream."""
         if self._raster is None:
@@ -120,6 +121,16 @@ class MapRenderer:
             out_c = tuple(config.get("map.capital_marker.outline_color", [0, 0, 0]))
             for cx, cy in capitals:
                 draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=fill_c, outline=out_c, width=2)
+
+        # Draw disaster zone markers
+        if disaster_zones:
+            d_r = 7
+            for pid, dtype in disaster_zones.items():
+                pinfo = self.get_province(pid)
+                if pinfo and "capital_coords" in pinfo:
+                    cx, cy = pinfo["capital_coords"]
+                    draw.ellipse([cx - d_r, cy - d_r, cx + d_r, cy + d_r], fill=(255, 60, 0, 200), outline=(255, 255, 255), width=2)
+                    draw.text((cx - 2, cy - 6), "!", fill=(255, 255, 255))
 
         # Draw legend if nation_names provided or mode specified
         self._draw_legend(draw, mode, legend_title, nation_names)
