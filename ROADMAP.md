@@ -73,10 +73,22 @@
 - [x] Nation contract fulfillment reputation scoring system.
 - [x] Strict balance validation preventing negative balances across all trades, escrow holds, and obligations.
 
-## Phase 8: Diplomacy & Blocs (Unfinished / Future)
+## Phase 8: People, Unrest, Disasters & Narrative Events (Completed)
+- [x] Population demographics tracking (workers, soldiers, unemployed, education, crime, health, pollution, corruption, war support).
+- [x] Happiness/stability dynamics affected by tax rates, health, education, crime, pollution, corruption.
+- [x] Unrest ladder (`normal` -> `protests` -> `riots` -> `civil_war`) with civil war province secession.
+- [x] Player responses to unrest (`reforms`, `concessions`, `police_control`, `propaganda`, `military_crackdown`) with costs and trade-offs.
+- [x] Config-driven disasters using seeded RNG (all 14 types: epidemic, tornado, hurricane, earthquake, tsunami, flood, drought, wildfire, volcano, famine, industrial accident, nuclear accident, terrorism, economic crash).
+- [x] Epidemic spread along active trade links and province borders.
+- [x] Disaster damage mitigation (hospitals, infrastructure, insurance, early warning).
+- [x] Narrative events with multi-choice options and stat trade-offs.
+- [x] Visual disaster zone markers overlaid on turn map rendering.
+- [x] Slash command cogs `/people`, `/disasters`, `/event`.
+
+## Phase 9: Diplomacy & Blocs (Unfinished / Future)
 - [ ] Alliances, blocs, shared treasuries, auto-created channels, embargoes, UN-style votes.
 
-## Phase 9: Military, Warfare & Covert Ops (Unfinished / Future)
+## Phase 10: Military, Warfare & Covert Ops (Unfinished / Future)
 - [ ] Component-based unit designer and production queues.
 - [ ] War system with terrain, weather, morale, occupation, peace treaties, and nukes.
 - [ ] Espionage and covert ops.

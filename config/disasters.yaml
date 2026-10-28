@@ -1,0 +1,128 @@
+# Sylus Disasters Balance Configuration
+disasters:
+  global_disaster_base_chance: 0.15
+  epidemic_spread:
+    trade_link_spread_chance: 0.30
+    border_spread_chance: 0.40
+    hospital_mitigation_factor: 0.50
+
+  types:
+    epidemic:
+      base_probability: 0.05
+      duration_turns: 3
+      terrain_prereq: []
+      pop_kill_percent: 0.05
+      infra_damage: 0
+      money_loss: 500.0
+      happiness_impact: -0.15
+    tornado:
+      base_probability: 0.04
+      duration_turns: 1
+      terrain_prereq: ["plains"]
+      pop_kill_percent: 0.01
+      infra_damage: 1
+      money_loss: 300.0
+      happiness_impact: -0.05
+    hurricane:
+      base_probability: 0.03
+      duration_turns: 2
+      terrain_prereq: ["coastal"]
+      pop_kill_percent: 0.02
+      infra_damage: 1
+      money_loss: 800.0
+      happiness_impact: -0.08
+    earthquake:
+      base_probability: 0.03
+      duration_turns: 1
+      terrain_prereq: []
+      pop_kill_percent: 0.03
+      infra_damage: 2
+      money_loss: 1000.0
+      happiness_impact: -0.10
+    tsunami:
+      base_probability: 0.02
+      duration_turns: 2
+      terrain_prereq: ["coastal"]
+      pop_kill_percent: 0.04
+      infra_damage: 2
+      money_loss: 1200.0
+      happiness_impact: -0.12
+    flood:
+      base_probability: 0.05
+      duration_turns: 2
+      terrain_prereq: ["plains", "coastal"]
+      pop_kill_percent: 0.01
+      infra_damage: 1
+      money_loss: 400.0
+      happiness_impact: -0.05
+    drought:
+      base_probability: 0.04
+      duration_turns: 3
+      terrain_prereq: ["plains", "desert"]
+      pop_kill_percent: 0.01
+      infra_damage: 0
+      money_loss: 600.0
+      happiness_impact: -0.08
+    wildfire:
+      base_probability: 0.04
+      duration_turns: 2
+      terrain_prereq: ["forest", "jungle"]
+      pop_kill_percent: 0.02
+      infra_damage: 1
+      money_loss: 500.0
+      happiness_impact: -0.06
+    volcano:
+      base_probability: 0.01
+      duration_turns: 3
+      terrain_prereq: ["mountain"]
+      pop_kill_percent: 0.05
+      infra_damage: 2
+      money_loss: 1500.0
+      happiness_impact: -0.15
+    famine:
+      base_probability: 0.03
+      duration_turns: 3
+      terrain_prereq: []
+      pop_kill_percent: 0.04
+      infra_damage: 0
+      money_loss: 700.0
+      happiness_impact: -0.12
+    industrial_accident:
+      base_probability: 0.03
+      duration_turns: 1
+      terrain_prereq: ["urban"]
+      pop_kill_percent: 0.02
+      infra_damage: 1
+      money_loss: 600.0
+      happiness_impact: -0.07
+    nuclear_accident:
+      base_probability: 0.01
+      duration_turns: 4
+      terrain_prereq: []
+      pop_kill_percent: 0.08
+      infra_damage: 3
+      money_loss: 3000.0
+      happiness_impact: -0.25
+    terrorism:
+      base_probability: 0.03
+      duration_turns: 1
+      terrain_prereq: []
+      pop_kill_percent: 0.01
+      infra_damage: 1
+      money_loss: 500.0
+      happiness_impact: -0.10
+    economic_crash:
+      base_probability: 0.02
+      duration_turns: 2
+      terrain_prereq: []
+      pop_kill_percent: 0.00
+      infra_damage: 0
+      money_loss: 2500.0
+      happiness_impact: -0.15
+
+  mitigation:
+    hospital_health_bonus: 0.10
+    infrastructure_damage_reduction_pct: 0.15
+    insurance_money_recovery_pct: 0.30
+    early_warning_pop_protection_pct: 0.40
+    international_aid_money_grant: 500.0

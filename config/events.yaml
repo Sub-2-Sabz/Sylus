@@ -1,0 +1,63 @@
+# Sylus Narrative Events Configuration
+events:
+  trigger_chance_per_turn: 0.20
+  templates:
+    labor_strike:
+      id: "labor_strike"
+      title: "Widespread Labor Strike"
+      description: "Workers across major industrial facilities demand better wages and working conditions."
+      choices:
+        - label: "Meet worker demands"
+          effects:
+            money: -1000.0
+            happiness: 0.10
+            unrest: -1
+        - label: "Enforce strict work requirements"
+          effects:
+            money: 0.0
+            happiness: -0.10
+            unrest: 1
+
+    bountiful_harvest:
+      id: "bountiful_harvest"
+      title: "Bountiful Agricultural Surplus"
+      description: "Favorable weather has resulted in unprecedented crop yields across the province."
+      choices:
+        - label: "Distribute food as free relief"
+          effects:
+            happiness: 0.12
+            health: 0.05
+        - label: "Sell surplus on the international market"
+          effects:
+            money: 1500.0
+            happiness: 0.02
+
+    scientific_breakthrough:
+      id: "scientific_breakthrough"
+      title: "Academic Breakthrough"
+      description: "Leading research institutes have published a major scientific discovery."
+      choices:
+        - label: "Fund commercial development"
+          effects:
+            money: -800.0
+            education: 0.08
+            research_points: 200.0
+        - label: "Keep research confidential for state defense"
+          effects:
+            war_support: 0.10
+            research_points: 100.0
+
+    diplomatic_scandal:
+      id: "diplomatic_scandal"
+      title: "Cabinet Corruption Scandal"
+      description: "Investigative journalists have exposed corruption among senior government officials."
+      choices:
+        - label: "Launch independent anti-corruption probe"
+          effects:
+            corruption: -0.10
+            money: -500.0
+            happiness: 0.05
+        - label: "Suppress news coverage and protect allies"
+          effects:
+            corruption: 0.08
+            happiness: -0.08
