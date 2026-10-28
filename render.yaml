@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: sylus
+    env: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: HTTP_PORT
+        value: 8080
+      - key: DATABASE_URL
+        sync: false
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: LOG_LEVEL
+        value: INFO
