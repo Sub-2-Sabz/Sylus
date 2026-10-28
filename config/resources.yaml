@@ -1,0 +1,11 @@
+# Sylus Resources Configuration
+resources:
+  types:
+    - name: "gold"
+      description: "Currency for trade and upkeep"
+    - name: "food"
+      description: "Sustenance for populations and armies"
+    - name: "wood"
+      description: "Construction material"
+    - name: "iron"
+      description: "Material for arms and equipment"
