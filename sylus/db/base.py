@@ -1,4 +1,5 @@
 from typing import AsyncGenerator
+from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -19,7 +20,12 @@ def get_engine(db_url: str | None = None) -> AsyncEngine:
         if db_url is None:
             from sylus.config import config
             db_url = config.database_url
-        _engine = create_async_engine(db_url, echo=False)
+
+        engine_kwargs = {"echo": False}
+        if "sqlite" not in db_url:
+            engine_kwargs["poolclass"] = NullPool
+
+        _engine = create_async_engine(db_url, **engine_kwargs)
     return _engine
 
 def get_session_factory(engine: AsyncEngine | None = None) -> async_sessionmaker[AsyncSession]:

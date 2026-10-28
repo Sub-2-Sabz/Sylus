@@ -19,7 +19,9 @@ def create_bot() -> commands.Bot:
 
     @bot.event
     async def on_ready():
+        from sylus.web.server import update_health_cache
         logger.info("Discord bot logged in", user=str(bot.user), user_id=bot.user.id if bot.user else None)
+        update_health_cache(discord_status="connected")
         if not getattr(bot, "_scheduler_started", False):
             scheduler.start()
             bot._scheduler_started = True

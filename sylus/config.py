@@ -67,6 +67,10 @@ class Config:
         return int(port_env)
 
     @property
+    def internal_secret(self) -> str:
+        return os.getenv("INTERNAL_SECRET", "")
+
+    @property
     def log_level(self) -> str:
         return os.getenv("LOG_LEVEL", "INFO")
 

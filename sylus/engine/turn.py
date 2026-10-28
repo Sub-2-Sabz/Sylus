@@ -165,6 +165,9 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
     is_snapshot_due = (current_turn % snapshot_interval == 0) or force
     snapshot_data = await export_snapshot(session) if is_snapshot_due else None
 
+    from sylus.web.server import update_health_cache
+    update_health_cache(turn=current_turn + 1)
+
     logger.info("Turn processed successfully", turn_number=current_turn, next_turn_at=new_next_turn.isoformat())
 
     return TurnResult(

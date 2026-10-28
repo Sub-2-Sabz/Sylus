@@ -1,11 +1,12 @@
 import asyncio
 import signal
 import sys
+from typing import Any
 from alembic import command
 from alembic.config import Config as AlembicConfig
 from sylus.config import config
 from sylus.logging import setup_logging, get_logger
-from sylus.web.server import run_web_server
+from sylus.web.server import run_web_server, update_health_cache
 from sylus.bot.bot import create_bot
 
 logger = get_logger(__name__)
@@ -26,10 +27,11 @@ async def run_migrations_async() -> None:
         logger.error("Database migrations failed", error=str(e))
         raise
 
-async def start_bot_with_backoff(stop_event: asyncio.Event) -> None:
+async def start_bot_with_backoff(bot: Any, stop_event: asyncio.Event) -> None:
     token = config.discord_token
     if not token:
         logger.warning("DISCORD_TOKEN is not configured. Skipping Discord bot startup.")
+        update_health_cache(discord_status="disconnected")
         await stop_event.wait()
         return
 
@@ -40,9 +42,9 @@ async def start_bot_with_backoff(stop_event: asyncio.Event) -> None:
     current_backoff = initial_backoff
 
     while not stop_event.is_set():
-        bot = create_bot()
         try:
             logger.info("Connecting Discord bot...")
+            update_health_cache(discord_status="connecting")
             start_task = asyncio.create_task(bot.start(token))
             stop_task = asyncio.create_task(stop_event.wait())
 
@@ -56,6 +58,7 @@ async def start_bot_with_backoff(stop_event: asyncio.Event) -> None:
 
             if stop_event.is_set():
                 logger.info("Stop event received, closing Discord bot connection.")
+                update_health_cache(discord_status="disconnected")
                 if hasattr(bot, "turn_scheduler"):
                     await bot.turn_scheduler.stop()
                 await bot.close()
@@ -69,11 +72,13 @@ async def start_bot_with_backoff(stop_event: asyncio.Event) -> None:
             current_backoff = initial_backoff
         except asyncio.CancelledError:
             logger.info("Bot execution cancelled.")
+            update_health_cache(discord_status="disconnected")
             if hasattr(bot, "turn_scheduler"):
                 await bot.turn_scheduler.stop()
             await bot.close()
             break
         except Exception as exc:
+            update_health_cache(discord_status="connecting")
             logger.error(
                 "Discord bot disconnected with error. Retrying in seconds...",
                 error=str(exc),
@@ -105,8 +110,11 @@ async def main():
         except NotImplementedError:
             pass
 
+    # Create Bot instance early so web server has reference for /internal/turn
+    bot = create_bot()
+
     # 1. Start Web Server first
-    web_runner = await run_web_server()
+    web_runner = await run_web_server(bot=bot)
 
     # 2. Run Database Migrations
     try:
@@ -116,9 +124,9 @@ async def main():
         await web_runner.cleanup()
         sys.exit(1)
 
-    # 3. Start Discord Bot with Reconnect Backoff
+    # 3. Start Discord Bot with Reconnect Backoff & Turn Catch-up
     try:
-        await start_bot_with_backoff(stop_event)
+        await start_bot_with_backoff(bot, stop_event)
     finally:
         logger.info("Shutting down web server")
         await web_runner.cleanup()

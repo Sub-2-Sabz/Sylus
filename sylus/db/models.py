@@ -310,6 +310,23 @@ class DisasterZone(Base):
     created_at_turn: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
 
+class UnitDesign(Base):
+    __tablename__ = "unit_designs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    category: Mapped[str] = mapped_column(String(50), nullable=False)
+    components: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    stats: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    production_cost: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    upkeep: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    build_time: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    nation: Mapped["Nation"] = relationship("Nation", foreign_keys=[nation_id])
+
 class NationEvent(Base):
     __tablename__ = "nation_events"
 
