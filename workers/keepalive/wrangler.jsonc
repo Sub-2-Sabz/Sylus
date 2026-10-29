@@ -7,6 +7,6 @@
     "crons": ["2-59/5 * * * *"]
   },
   "vars": {
-    "HEALTH_URL": "https://sylus-tu2x.onrender.com"
+    "HEALTH_URL": "https://sylus-1.onrender.com"
   }
 }
