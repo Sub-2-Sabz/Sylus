@@ -104,11 +104,21 @@
 - [x] Integration with existing marketplace and escrow system for `model_blueprint` asset trading and blueprint cloning.
 - [x] Comprehensive unit test suite (`tests/test_designer_ui.py`).
 
-## Phase 10: Military Production, Logistics & Warfare (Unfinished / Future)
-- [ ] Unit production queues at factories/shipyards/airbases and manpower/resource requirements.
-- [ ] Supply lines, fuel/ammo logistics, and unit morale/experience.
-- [ ] War system (casus belli, Action Points, probabilistic combat resolution, terrain/weather modifiers).
-- [ ] Occupation, blockades, peace treaties, and nuclear weapons.
+## Phase 9C: Military Production & Logistics (Completed)
+- [x] Production queues at factories, shipyards, and airbases with province facility capacity limits (`MilitaryQueue`).
+- [x] Manpower recruitment converting unemployed citizens into soldiers (`recruit_manpower`).
+- [x] Per-turn production queue advancement and creation/stacking of military formations (`MilitaryFormation`).
+- [x] Per-turn fuel, munitions, and financial upkeep consumption per formation.
+- [x] Readiness, morale, and experience adjustments based on supply status and peace-time progression.
+- [x] Espionage spy missions and Fog of War masking enemy unit designs, formations, and exact numbers unless spied on (`SpyIntel`).
+- [x] Slash command group `/military` (`forces`, `recruit`, `produce`, `queue`, `cancel`, `spy`).
+
+## Phase 10: Warfare & Combat Resolution (Unfinished / Future)
+- [ ] War declaration (casus belli, stability penalties, offensive/defensive war slots).
+- [ ] Action Points (AP) system for combat operations (ground attack, air strike, naval attack, missile launch, nuclear strike, blockade, airlift, ceasefire).
+- [ ] Probabilistic combat resolution with victory tiers (Immense Triumph, Moderate Success, Pyrrhic, Failure) and unit/infrastructure losses.
+- [ ] Terrain, weather, morale, experience, supply, radar, and fortification combat modifiers.
+- [ ] Occupation progress, province resistance, blockades, peace treaties, demilitarized zones, and nuclear fallout.
 
 ## Phase 11: Espionage, Blocs & World Life (Unfinished / Future)
 - [ ] Alliances, blocs, shared treasuries, embargoes, UN-style votes.

@@ -6,6 +6,15 @@ military:
     base_upkeep_ratio: 0.05
     stealth_detection_scale: 100
 
+  logistics:
+    unsupplied_morale_penalty: 0.10
+    unsupplied_readiness_penalty: 0.20
+    peace_experience_gain: 0.01
+    manpower_recruit_cost_money: 10
+    spy_mission_cost_money: 5000
+    spy_intel_duration_turns: 12
+    spy_intel_level_per_mission: 0.5
+
   categories:
     infantry:
       display_name: "Infantry / Soldier Loadouts"

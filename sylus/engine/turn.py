@@ -17,6 +17,7 @@ from sylus.services.contract import process_contract_turn
 from sylus.services.demographics import update_demographics_turn
 from sylus.services.disasters import process_disasters_turn
 from sylus.services.events import process_narrative_events_turn
+from sylus.services.military_production import process_military_turn
 from sylus.db.models import DisasterZone
 from sylus.logging import get_logger
 
@@ -125,6 +126,9 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
     # Process narrative events
     events_summary = await process_narrative_events_turn(session, current_turn)
 
+    # Process military queues, logistics & spy intel
+    military_summary = await process_military_turn(session, current_turn)
+
     # Record turn audit log entry
     audit = AuditLog(
         action_type="turn_processed",
@@ -138,6 +142,7 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
             "unrest_summary": unrest_summary,
             "disaster_summary": disaster_summary,
             "events_count": len(events_summary),
+            "military_summary": military_summary,
         },
         created_at=now,
     )

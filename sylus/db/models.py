@@ -340,3 +340,40 @@ class NationEvent(Base):
     chosen_option: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     created_at_turn: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+class MilitaryQueue(Base):
+    __tablename__ = "military_queues"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    province_id: Mapped[int] = mapped_column(Integer, ForeignKey("provinces.id", ondelete="CASCADE"), nullable=False, index=True)
+    design_id: Mapped[int] = mapped_column(Integer, ForeignKey("unit_designs.id", ondelete="CASCADE"), nullable=False, index=True)
+    quantity: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    turns_remaining: Mapped[int] = mapped_column(Integer, nullable=False)
+    facility_type: Mapped[str] = mapped_column(String(50), nullable=False)  # factory, shipyard, airbase
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+class MilitaryFormation(Base):
+    __tablename__ = "military_formations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    province_id: Mapped[int] = mapped_column(Integer, ForeignKey("provinces.id", ondelete="CASCADE"), nullable=False, index=True)
+    design_id: Mapped[int] = mapped_column(Integer, ForeignKey("unit_designs.id", ondelete="CASCADE"), nullable=False, index=True)
+    quantity: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    experience: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    morale: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+    fuel_status: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+    ammo_status: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+class SpyIntel(Base):
+    __tablename__ = "spy_intel"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    spy_nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    target_nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    intel_level: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)  # 0.0 to 1.0
+    expires_at_turn: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
