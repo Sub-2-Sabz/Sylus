@@ -227,3 +227,49 @@ buildings:
     storage_bonus: 5000
     terrain_bonus: {}
     slot_cost: 1
+
+  factory:
+    name: "Arms Factory"
+    description: "Enables production of land military equipment and vehicles."
+    cost:
+      money: 5000
+      steel: 100
+      aluminum: 50
+    construction_turns: 2
+    upkeep:
+      money: 400
+    inputs: {}
+    outputs: {}
+    terrain_bonus: {}
+    slot_cost: 2
+
+  shipyard:
+    name: "Naval Shipyard"
+    description: "Enables construction of warships and naval submarines."
+    cost:
+      money: 12000
+      steel: 300
+      wood: 200
+    construction_turns: 4
+    upkeep:
+      money: 1000
+    inputs: {}
+    outputs: {}
+    terrain_bonus:
+      coastal: 1.0
+    slot_cost: 3
+
+  airbase:
+    name: "Airbase"
+    description: "Enables manufacturing and deployment of combat aircraft."
+    cost:
+      money: 8000
+      aluminum: 150
+      steel: 100
+    construction_turns: 3
+    upkeep:
+      money: 600
+    inputs: {}
+    outputs: {}
+    terrain_bonus: {}
+    slot_cost: 2
