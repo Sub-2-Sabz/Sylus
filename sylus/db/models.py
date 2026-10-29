@@ -380,6 +380,9 @@ class MilitaryFormation(Base):
     design: Mapped["UnitDesign"] = relationship("UnitDesign")
 
 
+from sylus.db.war_models import War, WarLog
+
+
 class NationIntel(Base):
     __tablename__ = "nation_intels"
 
