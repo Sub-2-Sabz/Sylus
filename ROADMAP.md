@@ -95,8 +95,22 @@
 - [x] Created `UnitDesign` SQLAlchemy model and Alembic migration for saved named models.
 - [x] Comprehensive test suite for military designer (`tests/test_military.py`).
 
-## Phase 9B / 10: Military Discord UI, Warfare & Covert Ops (Unfinished / Future)
-- [ ] Discord UI (modal + select multi-step view) for unit designer (`/designer`).
-- [ ] Unit production queues at factories/shipyards/airbases and logistics/supply lines.
-- [ ] War system with terrain, weather, morale, occupation, peace treaties, and nukes.
-- [ ] Espionage and covert ops.
+## Phase 9B: Military Designer UI & Blueprint Licensing (Completed)
+- [x] Multi-step Py-cord UI view (`DesignerWizardView`) with category Select menu and component Select menus (<= 25 options per select, <= 5 action rows per view).
+- [x] Live computed stats, production cost, upkeep, and build time updates on component selections.
+- [x] Save modal (`SaveDesignModal`) prompting for custom model design name and enforcing research requirements.
+- [x] Saved model persistence in database (`UnitDesign`).
+- [x] `/design` slash command group (`create`, `list`, `info`, `delete`, `license`).
+- [x] Integration with existing marketplace and escrow system for `model_blueprint` asset trading and blueprint cloning.
+- [x] Comprehensive unit test suite (`tests/test_designer_ui.py`).
+
+## Phase 10: Military Production, Logistics & Warfare (Unfinished / Future)
+- [ ] Unit production queues at factories/shipyards/airbases and manpower/resource requirements.
+- [ ] Supply lines, fuel/ammo logistics, and unit morale/experience.
+- [ ] War system (casus belli, Action Points, probabilistic combat resolution, terrain/weather modifiers).
+- [ ] Occupation, blockades, peace treaties, and nuclear weapons.
+
+## Phase 11: Espionage, Blocs & World Life (Unfinished / Future)
+- [ ] Alliances, blocs, shared treasuries, embargoes, UN-style votes.
+- [ ] Espionage, sabotage, cyberattacks, coup attempts.
+- [ ] NPC factions, global events, and news feed.
