@@ -12,8 +12,10 @@ from sylus.db.models import (
     EscrowHold,
     PriceHistory,
     AuditLog,
+    UnitDesign,
     utc_now,
 )
+from sylus.services.military import clone_design_for_nation
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)
@@ -55,8 +57,16 @@ async def verify_and_deduct_asset(
             return False
         p.nation_id = None  # Province in escrow/limbo
         return True
+    elif asset_type == "model_blueprint":
+        try:
+            d_id = int(asset_id)
+        except ValueError:
+            return False
+        stmt = select(UnitDesign).where(UnitDesign.id == d_id, UnitDesign.nation_id == nation_id)
+        design = (await session.execute(stmt)).scalar_one_or_none()
+        return design is not None
     else:
-        # Generic asset check (units, model_blueprint, tech_license)
+        # Generic asset check (units, tech_license)
         nation = await session.get(Nation, nation_id)
         return nation is not None
 
@@ -76,6 +86,14 @@ async def add_asset_to_nation(
                 p.nation_id = nation_id
         except ValueError:
             pass
+    elif asset_type == "model_blueprint":
+        try:
+            d_id = int(asset_id)
+            design = await session.get(UnitDesign, d_id)
+            if design and design.nation_id != nation_id:
+                await clone_design_for_nation(session, d_id, nation_id)
+        except Exception as e:
+            logger.error("Failed to transfer blueprint model to nation", target_nation=nation_id, asset_id=asset_id, error=str(e))
 
 
 async def lock_in_escrow(

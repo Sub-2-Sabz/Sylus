@@ -191,3 +191,61 @@ async def create_unit_design(
 
     logger.info("Created unit design", design_id=design.id, name=design.name, category=category)
     return design
+
+
+async def list_nation_designs(session: AsyncSession, nation_id: int) -> List[UnitDesign]:
+    """Returns all saved unit designs owned by a given nation."""
+    stmt = select(UnitDesign).where(UnitDesign.nation_id == nation_id).order_by(UnitDesign.id.desc())
+    res = await session.execute(stmt)
+    return list(res.scalars().all())
+
+
+async def get_nation_design(session: AsyncSession, nation_id: int, design_id: int) -> Optional[UnitDesign]:
+    """Retrieves a specific unit design if owned by the given nation."""
+    stmt = select(UnitDesign).where(UnitDesign.id == design_id, UnitDesign.nation_id == nation_id)
+    res = await session.execute(stmt)
+    return res.scalar_one_or_none()
+
+
+async def delete_nation_design(session: AsyncSession, nation_id: int, design_id: int) -> bool:
+    """Deletes a saved unit design owned by a nation."""
+    design = await get_nation_design(session, nation_id, design_id)
+    if not design:
+        return False
+    await session.delete(design)
+    await session.commit()
+    logger.info("Deleted unit design", design_id=design_id, nation_id=nation_id)
+    return True
+
+
+async def clone_design_for_nation(
+    session: AsyncSession,
+    source_design_id: int,
+    target_nation_id: int,
+    custom_name: Optional[str] = None,
+) -> UnitDesign:
+    """Clones an existing unit design (e.g. via blueprint licensing) for a target nation."""
+    source = await session.get(UnitDesign, source_design_id)
+    if not source:
+        raise ValueError(f"Source unit design #{source_design_id} not found.")
+
+    now = utc_now()
+    new_name = custom_name.strip() if custom_name else f"{source.name} (Licensed)"
+    cloned = UnitDesign(
+        nation_id=target_nation_id,
+        name=new_name,
+        category=source.category,
+        components=dict(source.components or {}),
+        stats=dict(source.stats or {}),
+        production_cost=dict(source.production_cost or {}),
+        upkeep=dict(source.upkeep or {}),
+        build_time=source.build_time,
+        created_at=now,
+        updated_at=now,
+    )
+    session.add(cloned)
+    await session.commit()
+    await session.refresh(cloned)
+
+    logger.info("Cloned unit design blueprint", source_id=source_design_id, new_id=cloned.id, target_nation=target_nation_id)
+    return cloned
