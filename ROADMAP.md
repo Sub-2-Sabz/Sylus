@@ -104,9 +104,19 @@
 - [x] Integration with existing marketplace and escrow system for `model_blueprint` asset trading and blueprint cloning.
 - [x] Comprehensive unit test suite (`tests/test_designer_ui.py`).
 
-## Phase 10: Military Production, Logistics & Warfare (Unfinished / Future)
-- [ ] Unit production queues at factories/shipyards/airbases and manpower/resource requirements.
-- [ ] Supply lines, fuel/ammo logistics, and unit morale/experience.
+## Phase 9C: Military Production & Logistics (Completed)
+- [x] Unit production queues at factories, shipyards, and airbases with strict province facility capacity limits.
+- [x] Upkeep, gasoline fuel consumption, and munitions ammunition consumption per formation.
+- [x] Manpower recruitment and soldier training (`/military train`).
+- [x] Morale dynamics and passive experience gain per military formation.
+- [x] Fuel and ammo supply line status tracking and resupply actions (`/military supply`).
+- [x] Fog of War intel system obfuscating enemy forces, designs, and strengths unless spied on.
+- [x] Espionage spy missions (`/military spy`) lifting Fog of War for a duration.
+- [x] Slash command group `/military` (`build`, `queue`, `cancel`, `forces`, `train`, `supply`, `inspect`, `spy`).
+- [x] Database models (`MilitaryProductionQueue`, `MilitaryFormation`, `NationIntel`) and Alembic migration.
+- [x] Comprehensive unit test suite (`tests/test_military_logistics.py`).
+
+## Phase 10: Warfare & Combat Resolution (Unfinished / Future)
 - [ ] War system (casus belli, Action Points, probabilistic combat resolution, terrain/weather modifiers).
 - [ ] Occupation, blockades, peace treaties, and nuclear weapons.
 

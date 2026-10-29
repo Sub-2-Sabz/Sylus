@@ -6,6 +6,59 @@ military:
     base_upkeep_ratio: 0.05
     stealth_detection_scale: 100
 
+  facilities:
+    factory:
+      capacity_per_level: 5
+      allowed_categories:
+        - infantry
+        - air_defense
+        - tanks
+        - apcs
+        - artillery
+        - missiles
+        - drones
+        - nuclear_delivery
+    shipyard:
+      capacity_per_level: 2
+      allowed_categories:
+        - warships
+        - submarines
+    airbase:
+      capacity_per_level: 3
+      allowed_categories:
+        - fighters
+        - bombers
+        - helicopters
+
+  logistics:
+    cancel_refund_ratio: 0.8
+    supply_decay_rate: 0.2
+    fuel_per_unit: 1.0
+    ammo_per_unit: 1.0
+    unsupplied_morale_penalty: 10.0
+    supplied_morale_recovery: 5.0
+    experience_gain_per_turn: 1.0
+    max_morale: 100.0
+    max_experience: 100.0
+    resupply_cost_gasoline: 10.0
+    resupply_cost_munitions: 10.0
+
+  manpower:
+    soldier_training_cost_money: 50.0
+    soldier_training_turns: 1
+
+  fog_of_war:
+    default_intel_level: 0
+    spy_cost_money: 1000.0
+    spy_intel_duration_turns: 5
+    estimate_lower_ratio: 0.7
+    estimate_upper_ratio: 1.3
+    intel_levels:
+      0: "Hidden by Fog of War"
+      1: "Basic Range Estimate"
+      2: "Exact Unit Count & Design Name"
+      3: "Full Design Specifications & Stats"
+
   categories:
     infantry:
       display_name: "Infantry / Soldier Loadouts"

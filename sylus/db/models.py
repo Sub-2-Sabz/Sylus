@@ -340,3 +340,52 @@ class NationEvent(Base):
     chosen_option: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     created_at_turn: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+
+class MilitaryProductionQueue(Base):
+    __tablename__ = "military_production_queues"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    province_id: Mapped[int] = mapped_column(Integer, ForeignKey("provinces.id", ondelete="CASCADE"), nullable=False, index=True)
+    design_id: Mapped[int] = mapped_column(Integer, ForeignKey("unit_designs.id", ondelete="CASCADE"), nullable=False, index=True)
+    facility_type: Mapped[str] = mapped_column(String(50), nullable=False)
+    quantity: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    completed_quantity: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    turns_remaining: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+    nation: Mapped["Nation"] = relationship("Nation")
+    province: Mapped["Province"] = relationship("Province")
+    design: Mapped["UnitDesign"] = relationship("UnitDesign")
+
+
+class MilitaryFormation(Base):
+    __tablename__ = "military_formations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    province_id: Mapped[int] = mapped_column(Integer, ForeignKey("provinces.id", ondelete="CASCADE"), nullable=False, index=True)
+    design_id: Mapped[int] = mapped_column(Integer, ForeignKey("unit_designs.id", ondelete="CASCADE"), nullable=False, index=True)
+    quantity: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    experience: Mapped[float] = mapped_column(Float, default=10.0, nullable=False)
+    morale: Mapped[float] = mapped_column(Float, default=100.0, nullable=False)
+    fuel_supply: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+    ammo_supply: Mapped[float] = mapped_column(Float, default=1.0, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
+
+    nation: Mapped["Nation"] = relationship("Nation")
+    province: Mapped["Province"] = relationship("Province")
+    design: Mapped["UnitDesign"] = relationship("UnitDesign")
+
+
+class NationIntel(Base):
+    __tablename__ = "nation_intels"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    spy_nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    target_nation_id: Mapped[int] = mapped_column(Integer, ForeignKey("nations.id", ondelete="CASCADE"), nullable=False, index=True)
+    intel_level: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
+    expires_at_turn: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
