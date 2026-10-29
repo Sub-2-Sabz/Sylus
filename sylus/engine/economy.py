@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sylus.config import config
 from sylus.db.models import Nation, Province, ResourceLedger, Building, ResourceMarketIndex, utc_now
+from sylus.db.war_models import PortBlockade, ProvinceOccupation
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)
@@ -60,7 +61,7 @@ async def process_economy_turn(session: AsyncSession) -> Dict[str, Any]:
             if b.turns_remaining == 0:
                 active_buildings.append(b)
 
-        # 3. Calculate government & policy modifiers
+        # 3. Calculate government, policy & blockade modifiers
         gov_info = govs_cfg.get(nation.government_type, {})
         gov_happy_mod = float(gov_info.get("happiness_modifier", 0.0))
         gov_tax_eff = float(gov_info.get("tax_efficiency", 1.0))
@@ -75,6 +76,15 @@ async def process_economy_turn(session: AsyncSession) -> Dict[str, Any]:
             prod_mult *= float(pol_data.get("production_multiplier", 1.0))
             comm_mult *= float(pol_data.get("commerce_multiplier", 1.0))
             policy_happy_bonus += float(pol_data.get("happiness_bonus", 0.0))
+
+        # Check port blockade penalty
+        blk_stmt = select(PortBlockade).where(
+            PortBlockade.blockaded_nation_id == nation.id, PortBlockade.turns_remaining > 0
+        )
+        active_blockade = (await session.execute(blk_stmt)).scalar_one_or_none()
+        if active_blockade:
+            blk_pen = float(config.get("war.blockades.trade_income_penalty", 0.50))
+            comm_mult *= max(0.0, 1.0 - blk_pen)
 
         # 4. Population growth & Happiness (Laffer curve tax effect)
         tax_diff = abs(nation.tax_rate - opt_tax)
@@ -105,11 +115,19 @@ async def process_economy_turn(session: AsyncSession) -> Dict[str, Any]:
             b_upkeep = b_data.get("upkeep", {})
             b_terrain_bonus = b_data.get("terrain_bonus", {})
 
-            # Determine terrain modifier
+            # Determine terrain & occupation insurgency modifier
             prov = next((p for p in provinces if p.id == b.province_id), None)
             terrain_mult = 1.0
             if prov and prov.terrain in b_terrain_bonus:
                 terrain_mult = float(b_terrain_bonus[prov.terrain])
+
+            b_prod_mult = prod_mult
+            if prov:
+                occ_stmt = select(ProvinceOccupation).where(ProvinceOccupation.province_id == prov.id)
+                prov_occ = (await session.execute(occ_stmt)).scalar_one_or_none()
+                if prov_occ:
+                    ins_scale = float(config.get("war.occupation.insurgency_yield_penalty_scale", 0.005))
+                    b_prod_mult *= max(0.10, 1.0 - (prov_occ.insurgency_level * ins_scale))
 
             # Check input fulfillment ratio
             fulfillment = 1.0
@@ -128,7 +146,7 @@ async def process_economy_turn(session: AsyncSession) -> Dict[str, Any]:
 
             # Add outputs
             for out_res, out_amt in b_outputs.items():
-                gen = float(out_amt) * b.level * terrain_mult * prod_mult * fulfillment
+                gen = float(out_amt) * b.level * terrain_mult * b_prod_mult * fulfillment
                 if out_res == "money":
                     gen *= comm_mult
                 net_change[out_res] += gen

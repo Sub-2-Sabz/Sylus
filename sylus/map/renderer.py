@@ -71,6 +71,7 @@ class MapRenderer:
         legend_title: str = "Sylus World Map",
         nation_names: Optional[Dict[Tuple[int, int, int], str]] = None,
         disaster_zones: Optional[Dict[int, str]] = None,
+        occupied_provinces: Optional[Dict[int, int]] = None,
     ) -> io.BytesIO:
         """Renders world map image and returns PNG BytesIO stream."""
         if self._raster is None:
@@ -79,6 +80,7 @@ class MapRenderer:
         height, width = self._raster.shape
         ocean_rgb = config.get("map.default_colors.ocean", [30, 40, 60])
         unclaimed_rgb = config.get("map.default_colors.unclaimed_land", [180, 180, 180])
+        occ_color = config.get("war.map.occupied_stripe_color", [200, 50, 50])
         max_prov = int(self._raster.max()) if self._raster.size > 0 else 0
 
         # Build palette array: shape (max_prov + 1, 3)
@@ -93,7 +95,7 @@ class MapRenderer:
                     t_type = pinfo.get("terrain", "plains")
                     color = terrain_colors.get(t_type, unclaimed_rgb)
                     palette[pid] = color
-        else:  # Political mode
+        else:  # Political or War mode
             for pid_str in self._provinces:
                 pid = int(pid_str)
                 if pid <= max_prov:
@@ -103,6 +105,11 @@ class MapRenderer:
                 for pid, color in nation_owners.items():
                     if pid <= max_prov:
                         palette[pid] = color
+
+            if occupied_provinces:
+                for pid in occupied_provinces:
+                    if pid <= max_prov:
+                        palette[pid] = occ_color
 
         # Perform vectorized recolor via array indexing
         rgb_array = palette[self._raster]
@@ -122,6 +129,16 @@ class MapRenderer:
             for cx, cy in capitals:
                 draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=fill_c, outline=out_c, width=2)
 
+        # Draw occupied / war front markers
+        if occupied_provinces:
+            f_r = 6
+            for pid in occupied_provinces:
+                pinfo = self.get_province(pid)
+                if pinfo and "capital_coords" in pinfo:
+                    cx, cy = pinfo["capital_coords"]
+                    draw.rectangle([cx - f_r, cy - f_r, cx + f_r, cy + f_r], fill=(220, 20, 20, 220), outline=(255, 255, 255), width=2)
+                    draw.text((cx - 3, cy - 6), "X", fill=(255, 255, 255))
+
         # Draw disaster zone markers
         if disaster_zones:
             d_r = 7
@@ -133,7 +150,9 @@ class MapRenderer:
                     draw.text((cx - 2, cy - 6), "!", fill=(255, 255, 255))
 
         # Draw legend if nation_names provided or mode specified
-        self._draw_legend(draw, mode, legend_title, nation_names)
+        if mode == "war" and legend_title == "Sylus World Map":
+            legend_title = "War Front World Map"
+        self._draw_legend(draw, mode, legend_title, nation_names, has_occupations=bool(occupied_provinces))
 
         output = io.BytesIO()
         img.save(output, format=config.get("map.output_format", "PNG"))
@@ -146,6 +165,7 @@ class MapRenderer:
         mode: str,
         legend_title: str,
         nation_names: Optional[Dict[Tuple[int, int, int], str]],
+        has_occupations: bool = False,
     ) -> None:
         padding = config.get("map.legend.padding", 10)
         item_h = config.get("map.legend.item_height", 20)
@@ -162,6 +182,10 @@ class MapRenderer:
         elif nation_names:
             for col, nname in nation_names.items():
                 items.append((col, nname))
+
+        if has_occupations:
+            occ_c = tuple(config.get("war.map.occupied_stripe_color", [200, 50, 50]))
+            items.append((occ_c, "Occupied / Front"))
 
         if not items:
             return

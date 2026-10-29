@@ -9,6 +9,8 @@ from sylus.db.models import (
     MilitaryFormation, NationTech, NationReputation, utc_now
 )
 from sylus.services.war_modifier import evaluate_combat_modifiers
+from sylus.services.war_occupation import advance_occupation, apply_blockade, check_war_exhaustion
+from sylus.services.war_nukes import execute_nuclear_strike
 
 
 def _get_war_cfg() -> Dict[str, Any]:
@@ -110,7 +112,7 @@ async def declare_war(
         created_at_turn=current_turn,
     )
     session.add(war)
-    await session.commit()
+    await session.flush()
     await session.refresh(war)
 
     session.add(AuditLog(
@@ -120,7 +122,7 @@ async def declare_war(
         actor_id=attacker.discord_user_id,
         details={"attacker_id": attacker_id, "defender_id": defender_id, "casus_belli": casus_belli},
     ))
-    await session.commit()
+    await session.flush()
     return war
 
 
@@ -193,6 +195,28 @@ async def execute_war_action(
     if action_type == "ceasefire_offer":
         return await _handle_ceasefire(session, war, actor_id, opponent_id, current_turn)
 
+    # Nuclear strike special handling
+    if action_type == "nuclear_strike":
+        if not province_id:
+            raise ValueError("Target province_id required for nuclear strike.")
+        return await execute_nuclear_strike(session, war_id, actor_id, province_id, current_turn, seed)
+
+    # Blockade special handling
+    if action_type == "blockade":
+        blk = await apply_blockade(session, war_id, actor_id, opponent_id, province_id)
+        summary = f"Port Blockade established against Nation #{opponent_id} for {blk.turns_remaining} turns."
+        war_log = WarLog(
+            war_id=war.id, turn_number=current_turn, action_type="blockade",
+            attacker_id=actor_id, defender_id=opponent_id, province_id=province_id,
+            victory_tier="Moderate Success", attacker_score=50.0, defender_score=0.0, roll_diff=50.0,
+            casualties={}, loot_resources={}, modifiers_applied={"turns_remaining": blk.turns_remaining},
+            summary=summary,
+        )
+        session.add(war_log)
+        await session.flush()
+        await session.refresh(war_log)
+        return war_log
+
     target_prov = await session.get(Province, province_id) if province_id else None
     terrain = target_prov.terrain if target_prov else "plains"
     infra_lvl = target_prov.infrastructure if target_prov else 1
@@ -246,6 +270,10 @@ async def execute_war_action(
 
     casualties, loot = await _apply_combat_outcomes(session, actor_id, opponent_id, action_type, v_tier, target_prov)
 
+    # Advance occupation on ground attacks
+    if action_type == "ground_attack" and province_id:
+        await advance_occupation(session, war.id, actor_id, province_id, v_tier, current_turn)
+
     summary = f"{action_type.replace('_', ' ').title()} executed: {v_tier}. Score Diff: {roll_diff:.1f} (Act: {act_score:.1f}, Opp: {opp_score:.1f})"
     war_log = WarLog(
         war_id=war.id,
@@ -264,9 +292,12 @@ async def execute_war_action(
         summary=summary,
     )
     session.add(war_log)
-    await session.commit()
-    await session.refresh(war_log)
+    await session.flush()
 
+    # Check for war exhaustion / surrender
+    await check_war_exhaustion(session, war.id, current_turn)
+
+    await session.refresh(war_log)
     return war_log
 
 
@@ -293,7 +324,7 @@ async def _handle_ceasefire(
         casualties={}, loot_resources={}, modifiers_applied={}, summary=summary
     )
     session.add(war_log)
-    await session.commit()
+    await session.flush()
     await session.refresh(war_log)
     return war_log
 
