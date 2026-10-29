@@ -1,0 +1,134 @@
+war:
+  declarations:
+    max_offensive_wars: 3
+    max_defensive_wars: 3
+    min_score_ratio: 0.60
+    max_score_ratio: 1.75
+    unprovoked_happiness_penalty: 0.10
+    unprovoked_war_support_penalty: 0.15
+    unprovoked_reputation_penalty: 15.0
+    casus_belli_types:
+      - territorial_claim
+      - border_dispute
+      - aggressor
+      - retaliation
+      - broken_contract
+      - none
+
+  action_points:
+    max_action_points: 12
+    ap_refill_per_turn: 12
+    action_ap_costs:
+      ground_attack: 3
+      air_strike: 2
+      naval_attack: 3
+      missile_launch: 4
+      airlift: 2
+      blockade: 4
+      ceasefire_offer: 0
+
+  beige:
+    beige_duration_turns: 12
+
+  victory_tiers:
+    thresholds:
+      immense_triumph: 40.0
+      moderate_success: 10.0
+      pyrrhic: -10.0
+    roll_dice_min: -15.0
+    roll_dice_max: 15.0
+    casualty_ratios:
+      immense_triumph:
+        attacker: 0.05
+        defender: 0.35
+      moderate_success:
+        attacker: 0.15
+        defender: 0.25
+      pyrrhic:
+        attacker: 0.30
+        defender: 0.20
+      failure:
+        attacker: 0.35
+        defender: 0.08
+    loot_ratios:
+      immense_triumph: 0.20
+      moderate_success: 0.10
+      pyrrhic: 0.05
+      failure: 0.00
+    infrastructure_damage:
+      immense_triumph: 2
+      moderate_success: 1
+      pyrrhic: 0
+      failure: 0
+
+  modifiers:
+    terrain:
+      mountains:
+        defender_bonus: 0.25
+        attacker_penalty: -0.15
+      jungle:
+        defender_bonus: 0.20
+        tank_penalty: -0.20
+      desert:
+        fuel_multiplier: 1.30
+        attacker_bonus: 0.05
+      arctic:
+        equipment_penalty: -0.15
+      urban:
+        defender_bonus: 0.30
+        infantry_bonus: 0.15
+      forest:
+        defender_bonus: 0.10
+      plains:
+        attacker_bonus: 0.10
+      coastal:
+        naval_support_bonus: 0.15
+    weather:
+      clear:
+        multiplier: 1.0
+      rain:
+        air_penalty: -0.10
+      storm:
+        air_grounded: true
+        naval_penalty: -0.20
+      fog:
+        accuracy_penalty: -0.25
+      mud:
+        ground_speed_penalty: -0.30
+    season:
+      spring:
+        multiplier: 1.0
+      summer:
+        multiplier: 1.0
+      autumn:
+        mud_probability: 0.25
+      winter:
+        arctic_penalty: -0.20
+    supply:
+      unsupplied_power_penalty: -0.50
+    morale:
+      base_morale: 100.0
+      multiplier_scale: 0.005
+    fatigue:
+      fatigue_per_action: 0.10
+      fatigue_decay_per_turn: 0.05
+      fatigue_penalty_scale: 0.50
+    experience:
+      base_experience: 10.0
+      multiplier_scale: 0.002
+    tech_gap:
+      bonus_per_tech_difference: 0.05
+      max_tech_gap_bonus: 0.30
+    air_superiority:
+      air_ratio_bonus_scale: 0.25
+    naval_control:
+      naval_ratio_bonus_scale: 0.25
+      blockade_trade_penalty_ratio: 0.50
+    radar:
+      radar_detection_bonus: 0.15
+    fortifications:
+      fortification_defense_bonus_per_level: 0.10
+    home_field:
+      home_field_defender_bonus: 0.15
+    war_support:
+      war_support_scale: 0.30

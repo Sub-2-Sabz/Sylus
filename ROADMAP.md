@@ -116,9 +116,20 @@
 - [x] Database models (`MilitaryProductionQueue`, `MilitaryFormation`, `NationIntel`) and Alembic migration.
 - [x] Comprehensive unit test suite (`tests/test_military_logistics.py`).
 
-## Phase 10: Warfare & Combat Resolution (Unfinished / Future)
-- [ ] War system (casus belli, Action Points, probabilistic combat resolution, terrain/weather modifiers).
-- [ ] Occupation, blockades, peace treaties, and nuclear weapons.
+## Phase 10A: War Core & Combat Resolution (Completed)
+- [x] War declarations with valid Casus Belli, war slots validation, score range limits, and unprovoked stability/reputation penalties.
+- [x] Beige protection & recovery periods preventing war declarations.
+- [x] Turn-based Action Points (AP) refill (+12 AP/turn up to max 12) and fatigue decay.
+- [x] All 7 core war actions (`ground_attack`, `air_strike`, `naval_attack`, `missile_launch`, `airlift`, `blockade`, `ceasefire_offer`).
+- [x] Probabilistic stat-based combat resolution with victory tiers (`Immense Triumph`, `Moderate Success`, `Pyrrhic`, `Failure`).
+- [x] Fully modular config-driven combat modifiers (`/config/war.yaml`) for terrain, weather, season, supply, morale, fatigue, experience, tech gap, air superiority, naval control, radar, fortifications, home-field bonus, and war support.
+- [x] Per-round war log embed generator and slash command group `/war` (`declare`, `action`, `ceasefire`, `list`, `info`, `log`).
+- [x] Comprehensive test suite for independent combat modifiers and war core engine (`tests/test_war.py`).
+
+## Phase 10B: Occupation, Peace Treaties & Nukes (Unfinished / Future)
+- [ ] Province occupation progress & resistance mechanics.
+- [ ] Formal peace treaties with enforced terms (reparations, territory transfer, tech licensing, demilitarization).
+- [ ] Strategic nuclear weapons delivery, intercept defense, fallout zones, and global reputation penalties.
 
 ## Phase 11: Espionage, Blocs & World Life (Unfinished / Future)
 - [ ] Alliances, blocs, shared treasuries, embargoes, UN-style votes.
