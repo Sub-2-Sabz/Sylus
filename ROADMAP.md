@@ -126,10 +126,15 @@
 - [x] Per-round war log embed generator and slash command group `/war` (`declare`, `action`, `ceasefire`, `list`, `info`, `log`).
 - [x] Comprehensive test suite for independent combat modifiers and war core engine (`tests/test_war.py`).
 
-## Phase 10B: Occupation, Peace Treaties & Nukes (Unfinished / Future)
-- [ ] Province occupation progress & resistance mechanics.
-- [ ] Formal peace treaties with enforced terms (reparations, territory transfer, tech licensing, demilitarization).
-- [ ] Strategic nuclear weapons delivery, intercept defense, fallout zones, and global reputation penalties.
+## Phase 10B: Occupation, Peace Treaties & Nukes (Completed)
+- [x] Province capture with occupation progress, insurgency dynamics, and revolt handling (`sylus/services/war_occupation.py`).
+- [x] Infrastructure destruction, building damage, and port blockades with trade penalties (`PortBlockade`).
+- [x] War support exhaustion auto-surrender and capital capture forced surrender (`trigger_forced_surrender`).
+- [x] Ceasefires and formal peace treaties with enforced terms: reparations, territory transfers, tech licensing, demilitarization (`PeaceTreaty`, `sylus/services/peace_treaty.py`).
+- [x] Strategic nuclear weapons: tech & resource requirements (Uranium/Plutonium), delivery system requirements, air-defense interception rolls, devastation, fallout disaster zones, and global reputation penalties (`sylus/services/war_nukes.py`).
+- [x] War-front rendering on world map with occupied province markers and legend (`mode="war"` in `MapRenderer`).
+- [x] Slash command group updates (`/war peace_offer`, `/war peace_accept`, `/war occupation`, `/war map`).
+- [x] Comprehensive test suite for Phase 10B (`tests/test_war_phase10b.py`).
 
 ## Phase 11: Espionage, Blocs & World Life (Unfinished / Future)
 - [ ] Alliances, blocs, shared treasuries, embargoes, UN-style votes.

@@ -25,7 +25,65 @@ war:
       missile_launch: 4
       airlift: 2
       blockade: 4
+      nuclear_strike: 6
       ceasefire_offer: 0
+
+  occupation:
+    progress_per_ground_victory:
+      immense_triumph: 50.0
+      moderate_success: 25.0
+      pyrrhic: 10.0
+      failure: 0.0
+    insurgency_growth_per_turn: 5.0
+    insurgency_decay_garrison: 10.0
+    insurgency_damage_threshold: 50.0
+    insurgency_yield_penalty_scale: 0.005
+    revolting_threshold: 100.0
+
+  blockades:
+    blockade_ap_cost: 4
+    trade_income_penalty: 0.50
+    duration_turns: 6
+
+  exhaustion:
+    war_support_loss_per_casualty_ratio: 0.05
+    war_support_loss_per_province_lost: 0.10
+    exhaustion_threshold: 0.05
+    capital_capture_forced_surrender: true
+    surrender_happiness_penalty: 0.20
+    surrender_war_support_penalty: 0.30
+
+  peace_treaties:
+    default_duration_turns: 24
+    max_reparations_per_turn: 5000.0
+    max_territory_transfers: 3
+    demilitarization_troop_cap: 500
+    demilitarization_happiness_penalty: 0.05
+
+  nuclear_weapons:
+    required_tech: "nuclear_weapons"
+    required_resources:
+      uranium: 50.0
+      plutonium: 20.0
+    ap_cost: 6
+    interception:
+      base_air_defense_chance: 0.40
+      max_interception_chance: 0.85
+    devastation:
+      population_mortality_rate: 0.60
+      infrastructure_loss: 10
+      building_destruction_rate: 1.0
+      fallout_duration_turns: 12
+      reputation_penalty: 50.0
+      happiness_penalty: 0.30
+      war_support_penalty: 0.25
+      defender_happiness_penalty: 0.40
+      defender_war_support_penalty: 0.30
+
+  map:
+    front_line_color: [255, 0, 0]
+    occupied_stripe_color: [200, 50, 50]
+    capital_capture_color: [139, 0, 0]
 
   beige:
     beige_duration_turns: 12

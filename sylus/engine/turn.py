@@ -19,7 +19,10 @@ from sylus.services.disasters import process_disasters_turn
 from sylus.services.events import process_narrative_events_turn
 from sylus.services.military_logistics import process_military_turn
 from sylus.services.war import process_war_turn
+from sylus.services.war_occupation import process_occupation_and_blockades_turn
+from sylus.services.peace_treaty import process_peace_treaties_turn
 from sylus.db.models import DisasterZone
+from sylus.db.war_models import ProvinceOccupation
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)
@@ -133,6 +136,10 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
     # Process war action point refills and beige state decay
     war_summary = await process_war_turn(session, current_turn)
 
+    # Process occupations, insurgency, blockades, and peace treaties
+    occ_blk_summary = await process_occupation_and_blockades_turn(session, current_turn)
+    peace_summary = await process_peace_treaties_turn(session, current_turn)
+
     # Record turn audit log entry
     audit = AuditLog(
         action_type="turn_processed",
@@ -148,6 +155,8 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
             "events_count": len(events_summary),
             "military_summary": military_summary,
             "war_summary": war_summary,
+            "occupation_summary": occ_blk_summary,
+            "peace_summary": peace_summary,
         },
         created_at=now,
     )
@@ -168,7 +177,7 @@ async def process_single_turn(session: AsyncSession, force: bool = False) -> Opt
             {"name": "Unrest & Secessions", "value": f"Protests: {unrest_summary['protests']}, Riots: {unrest_summary['riots']}, Civil Wars: {unrest_summary['civil_wars']}, Secessions: {unrest_summary['secessions']}", "inline": False},
             {"name": "Disasters", "value": f"New: {disaster_summary['new_disasters_count']}, Epidemic Spreads: {disaster_summary['epidemic_summary']['spread_count']}", "inline": False},
             {"name": "Military & Logistics", "value": f"Completed Units: {military_summary['completed_units']}, Formations Processed: {military_summary['active_formations_processed']}", "inline": False},
-            {"name": "War & Conflicts", "value": f"Active Refilled: {war_summary['active_wars_refilled']}, Beige Concluded: {war_summary['beige_wars_ended']}", "inline": False},
+            {"name": "War & Conflicts", "value": f"Active Refilled: {war_summary['active_wars_refilled']}, Beige Concluded: {war_summary['beige_wars_ended']}\nOccupations: {occ_blk_summary['occupations_processed']} (Revolts: {occ_blk_summary['revolts_occurred']})\nPeace Treaties Active: Reparations: {peace_summary['reparations_executed']}", "inline": False},
         ],
         "timestamp": now.isoformat(),
     }
@@ -217,7 +226,18 @@ async def _render_turn_map(session: AsyncSession) -> bytes:
         dz_list = dz_res.scalars().all()
         disaster_map = {dz.province_id: dz.disaster_type for dz in dz_list}
 
-        stream = renderer.render_map(nation_owners=nation_owners, disaster_zones=disaster_map)
+        # Fetch occupations for war front map rendering
+        occ_res = await session.execute(select(ProvinceOccupation))
+        occupations = occ_res.scalars().all()
+        occupied_provinces = {o.province_id: o.occupier_nation_id for o in occupations if o.occupation_progress > 0.0}
+
+        mode = "war" if occupied_provinces else "political"
+        stream = renderer.render_map(
+            nation_owners=nation_owners,
+            disaster_zones=disaster_map,
+            occupied_provinces=occupied_provinces,
+            mode=mode,
+        )
         return stream.getvalue()
     except Exception as e:
         logger.warning("Failed to render turn map, returning empty image placeholder", error=str(e))
