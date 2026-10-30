@@ -13,3 +13,5 @@ bot:
   reconnect_initial_backoff: 5
   reconnect_max_backoff: 300
   reconnect_backoff_factor: 2
+memory:
+  warning_threshold_mb: 400.0

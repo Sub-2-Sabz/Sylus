@@ -5,13 +5,14 @@ from typing import Any
 from alembic import command
 from alembic.config import Config as AlembicConfig
 from sylus.config import config
-from sylus.logging import setup_logging, get_logger
+from sylus.logging import setup_logging, get_logger, log_memory_usage
 from sylus.web.server import run_web_server, update_health_cache
 from sylus.bot.bot import create_bot
 from sylus.db.base import get_session
 from sylus.services.seed_world import sync_provinces_db
 
 logger = get_logger(__name__)
+
 
 async def run_migrations_async() -> None:
     logger.info("Starting database migrations")
@@ -28,6 +29,7 @@ async def run_migrations_async() -> None:
     except Exception as e:
         logger.error("Database migrations failed", error=str(e))
         raise
+
 
 async def start_bot_with_backoff(bot: Any, stop_event: asyncio.Event) -> None:
     token = config.discord_token
@@ -66,7 +68,6 @@ async def start_bot_with_backoff(bot: Any, stop_event: asyncio.Event) -> None:
                 await bot.close()
                 break
 
-            # If start_task completed or failed
             if start_task.exception():
                 exc = start_task.exception()
                 raise exc
@@ -95,8 +96,10 @@ async def start_bot_with_backoff(bot: Any, stop_event: asyncio.Event) -> None:
                 break
             current_backoff = min(current_backoff * backoff_factor, max_backoff)
 
+
 async def main():
     setup_logging()
+    log_memory_usage("Startup baseline")
     logger.info("Starting Sylus application")
 
     stop_event = asyncio.Event()
@@ -112,7 +115,6 @@ async def main():
         except NotImplementedError:
             pass
 
-    # Create Bot instance early so web server has reference for /internal/turn
     bot = create_bot()
 
     # 1. Start Web Server first
@@ -128,6 +130,8 @@ async def main():
         await web_runner.cleanup()
         sys.exit(1)
 
+    log_memory_usage("Startup initialization complete")
+
     # 3. Start Discord Bot with Reconnect Backoff & Turn Catch-up
     try:
         await start_bot_with_backoff(bot, stop_event)
@@ -135,6 +139,7 @@ async def main():
         logger.info("Shutting down web server")
         await web_runner.cleanup()
         logger.info("Sylus shutdown complete.")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

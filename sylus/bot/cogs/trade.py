@@ -4,6 +4,7 @@ from sqlalchemy import select
 
 from sylus.db.base import get_session
 from sylus.db.models import Nation, TradeOffer, PriceHistory, GlobalState
+from sylus.services.province_search import get_province_index, province_autocomplete
 from sylus.services.trade import (
     create_direct_trade_offer,
     accept_trade_offer,
@@ -233,7 +234,6 @@ class TradeCog(commands.Cog):
                 embed.description = "No active marketplace orders match your filter."
             else:
                 lines = []
-                from sylus.services.province_search import get_province_index
                 idx = get_province_index()
                 for o in orders[:15]:
                     rem = o.total_quantity - o.filled_quantity

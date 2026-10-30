@@ -9,5 +9,3 @@ python-dotenv==1.2.4
 structlog==26.1.0
 numpy>=2.0.0
 pillow>=10.0.0
-pytest==9.2.0
-pytest-asyncio==1.4.1
