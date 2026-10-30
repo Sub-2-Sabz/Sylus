@@ -7,6 +7,7 @@ from sylus.config import config
 from sylus.db.base import get_session
 from sylus.db.models import Nation, Province, ResourceLedger, Building, ResourceMarketIndex
 from sylus.services.nation import create_nation, set_policy, build_structure, upgrade_structure, demolish_structure, claim_province
+from sylus.services.province_search import get_province_index, province_autocomplete
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)

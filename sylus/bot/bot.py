@@ -12,7 +12,17 @@ logger = get_logger(__name__)
 
 def create_bot() -> commands.Bot:
     intents = discord.Intents.default()
-    bot = commands.Bot(command_prefix="/", intents=intents)
+    intents.members = False
+    intents.presences = False
+    intents.message_content = False
+
+    bot = commands.Bot(
+        command_prefix="/",
+        intents=intents,
+        member_cache_flags=discord.MemberCacheFlags.none(),
+        max_messages=None,
+        chunk_guilds_at_startup=False,
+    )
 
     scheduler = TurnScheduler(bot=bot)
     bot.turn_scheduler = scheduler

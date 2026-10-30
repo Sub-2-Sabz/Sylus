@@ -4,6 +4,7 @@ from sqlalchemy import select
 
 from sylus.db.base import get_session
 from sylus.db.models import Nation, Province, UnitDesign, GlobalState
+from sylus.services.province_search import get_province_index, province_autocomplete
 from sylus.services.military_logistics import (
     enqueue_unit_production,
     list_production_queue,
