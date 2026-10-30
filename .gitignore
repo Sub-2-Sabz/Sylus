@@ -9,3 +9,13 @@ __pycache__/
 .venv/
 env/
 venv/
+
+# Android / Gradle
+.gradle/
+build/
+app/build/
+*.apk
+*.aar
+*.keystore
+.idea/
+*.iml
