@@ -45,8 +45,8 @@ def test_progress_bar_formatting():
 @pytest.mark.asyncio
 async def test_research_queue_and_prerequisites(db_session: AsyncSession):
     # Setup starting province and nation
-    p = Province(id=1, name="Alpha", terrain="plains", is_capital=True)
-    db_session.add(p)
+    p = await db_session.get(Province, 1)
+    p.is_capital = True
     await db_session.commit()
 
     nat = await create_nation(
@@ -73,8 +73,8 @@ async def test_research_queue_and_prerequisites(db_session: AsyncSession):
 
 @pytest.mark.asyncio
 async def test_research_cancellation_and_refund(db_session: AsyncSession):
-    p = Province(id=2, name="Beta", terrain="plains", is_capital=True)
-    db_session.add(p)
+    p = await db_session.get(Province, 2)
+    p.is_capital = True
     await db_session.commit()
 
     nat = await create_nation(
@@ -106,8 +106,8 @@ async def test_research_cancellation_and_refund(db_session: AsyncSession):
 
 @pytest.mark.asyncio
 async def test_research_turn_processing_and_unlock(db_session: AsyncSession):
-    p = Province(id=3, name="Gamma", terrain="plains", is_capital=True)
-    db_session.add(p)
+    p = await db_session.get(Province, 3)
+    p.is_capital = True
     await db_session.commit()
 
     nat = await create_nation(
@@ -146,9 +146,10 @@ async def test_research_turn_processing_and_unlock(db_session: AsyncSession):
 
 @pytest.mark.asyncio
 async def test_tech_license_creation_and_royalties(db_session: AsyncSession):
-    p1 = Province(id=4, name="Delta", terrain="plains", is_capital=True)
-    p2 = Province(id=5, name="Epsilon", terrain="plains", is_capital=True)
-    db_session.add_all([p1, p2])
+    p1 = await db_session.get(Province, 4)
+    p2 = await db_session.get(Province, 5)
+    p1.is_capital = True
+    p2.is_capital = True
     await db_session.commit()
 
     licensor = await create_nation(

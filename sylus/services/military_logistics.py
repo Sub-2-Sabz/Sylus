@@ -292,7 +292,7 @@ async def get_visible_nation_forces(session: AsyncSession, viewer_nation_id: int
     for f in formations:
         design = await session.get(UnitDesign, f.design_id)
         prov = await session.get(Province, f.province_id)
-        prov_name = prov.name if prov else "Unknown Province"
+        prov_name = prov.display_name if prov and prov.display_name else (prov.name if prov else "Unknown Province")
 
         if intel_level >= 2:
             visible_forces.append({

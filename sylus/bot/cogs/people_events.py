@@ -104,7 +104,8 @@ class PeopleEventsCog(commands.Cog):
             embed = discord.Embed(title="🚨 Active Global Disaster Zones", color=discord.Color.red())
             lines = []
             for z in zones:
-                p_name = provs[z.province_id].name if z.province_id in provs else f"Province #{z.province_id}"
+                prov = provs.get(z.province_id)
+                p_name = prov.display_name if prov and prov.display_name else (prov.name if prov else f"Province #{z.province_id}")
                 lines.append(f"• **{z.disaster_type.title()}** in **{p_name}** ({z.turns_remaining} turn(s) remaining)")
 
             embed.description = "\n".join(lines)

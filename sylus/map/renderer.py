@@ -159,6 +159,77 @@ class MapRenderer:
         output.seek(0)
         return output
 
+    def render_region_map(
+        self,
+        province_id: int | str,
+        nation_owners: Optional[Dict[int, Tuple[int, int, int]]] = None,
+        capitals: Optional[List[Tuple[int, int]]] = None,
+        mode: str = "political",
+        margin_pixels: int = 50,
+    ) -> Tuple[io.BytesIO, Optional[Dict[str, Any]]]:
+        """Renders zoomed region map around a specific province."""
+        pinfo = None
+        pid = None
+
+        if isinstance(province_id, int) or (isinstance(province_id, str) and province_id.isdigit()):
+            pid = int(province_id)
+            pinfo = self.get_province(pid)
+        else:
+            # Search by code or display_name
+            from sylus.services.province_search import get_province_index
+            rec = get_province_index().resolve(str(province_id))
+            if rec:
+                pid = rec["id"]
+                pinfo = rec["raw"]
+
+        if self._raster is None or pid is None:
+            return self.render_map(nation_owners=nation_owners, capitals=capitals, mode=mode), pinfo
+
+        # Full render stream first
+        height, width = self._raster.shape
+        full_img_stream = self.render_map(nation_owners=nation_owners, capitals=capitals, mode=mode)
+        full_img = Image.open(full_img_stream)
+
+        # Locate province bounding box
+        y_indices, x_indices = np.where(self._raster == pid)
+        if len(y_indices) > 0:
+            min_x, max_x = int(x_indices.min()), int(x_indices.max())
+            min_y, max_y = int(y_indices.min()), int(y_indices.max())
+        elif pinfo and "capital_coords" in pinfo:
+            cx, cy = pinfo["capital_coords"]
+            min_x, max_x = cx - 30, cx + 30
+            min_y, max_y = cy - 30, cy + 30
+        else:
+            min_x, max_x, min_y, max_y = 0, width, 0, height
+
+        x0 = max(0, min_x - margin_pixels)
+        x1 = min(width, max_x + margin_pixels)
+        y0 = max(0, min_y - margin_pixels)
+        y1 = min(height, max_y + margin_pixels)
+
+        cropped_img = full_img.crop((x0, y0, x1, y1)).convert("RGBA")
+        draw = ImageDraw.Draw(cropped_img)
+
+        # Draw label on cropped region
+        disp_name = pinfo.get("display_name", pinfo.get("name", f"Province {pid}")) if pinfo else f"Province {pid}"
+        if pinfo and "capital_coords" in pinfo:
+            cx, cy = pinfo["capital_coords"]
+            lx, ly = cx - x0, cy - y0
+        else:
+            lx, ly = (x1 - x0) // 2, (y1 - y0) // 2
+
+        # Draw label banner
+        text_bbox = draw.textbbox((lx, ly), disp_name)
+        pad = 4
+        banner = [text_bbox[0] - pad, text_bbox[1] - pad, text_bbox[2] + pad, text_bbox[3] + pad]
+        draw.rectangle(banner, fill=(20, 20, 25, 220), outline=(255, 215, 0), width=1)
+        draw.text((lx, ly), disp_name, fill=(255, 255, 255))
+
+        output = io.BytesIO()
+        cropped_img.save(output, format=config.get("map.output_format", "PNG"))
+        output.seek(0)
+        return output, pinfo
+
     def _draw_legend(
         self,
         draw: ImageDraw.ImageDraw,

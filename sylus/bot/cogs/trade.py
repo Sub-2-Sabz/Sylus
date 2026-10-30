@@ -168,7 +168,7 @@ class TradeCog(commands.Cog):
         self,
         ctx: discord.ApplicationContext,
         asset_type: str = discord.Option(str, "Asset type to buy", choices=["resource", "province", "unit", "model_blueprint", "tech_license"]),
-        asset_id: str = discord.Option(str, "Asset ID or resource name"),
+        asset_id: str = discord.Option(str, "Asset ID, province, or resource name", autocomplete=province_autocomplete),
         quantity: float = discord.Option(float, "Total quantity to buy"),
         unit_price: float = discord.Option(float, "Offer price per unit in money ($)"),
     ):
@@ -233,10 +233,17 @@ class TradeCog(commands.Cog):
                 embed.description = "No active marketplace orders match your filter."
             else:
                 lines = []
+                from sylus.services.province_search import get_province_index
+                idx = get_province_index()
                 for o in orders[:15]:
                     rem = o.total_quantity - o.filled_quantity
                     tag = "🔴 SELL" if o.offer_type == "sell_order" else "🟢 BUY"
-                    lines.append(f"**#{o.id}** {tag} `{o.asset_type}:{o.asset_id}` - Qty: **{rem:,.1f}** @ **${o.unit_price:,.2f}**")
+                    asset_disp = o.asset_id
+                    if o.asset_type == "province":
+                        prec = idx.resolve(o.asset_id)
+                        if prec:
+                            asset_disp = prec["display_name"]
+                    lines.append(f"**#{o.id}** {tag} `{o.asset_type}:{asset_disp}` - Qty: **{rem:,.1f}** @ **${o.unit_price:,.2f}**")
                 embed.description = "\n".join(lines)
 
             await ctx.respond(embed=embed)

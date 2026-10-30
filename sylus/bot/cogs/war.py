@@ -266,7 +266,7 @@ class WarCog(commands.Cog):
                 lines = []
                 for o in occupations:
                     prov = await session.get(Province, o.province_id)
-                    pname = prov.name if prov else f"Province #{o.province_id}"
+                    pname = prov.display_name if prov and prov.display_name else (prov.name if prov else f"Province #{o.province_id}")
                     lines.append(f"• **{pname}**: Progress **{o.occupation_progress:.1f}%** | Insurgency **{o.insurgency_level:.1f}%**")
                 embed.description = "\n".join(lines)
 
@@ -344,6 +344,11 @@ def _build_war_log_embed(war_log: WarLog, actor_name: str) -> discord.Embed:
         description=f"**Actor:** {actor_name} | **Action:** `{war_log.action_type}`",
         color=col,
     )
+    if war_log.province_id:
+        from sylus.services.province_search import get_province_index
+        prec = get_province_index().get_by_id(war_log.province_id)
+        if prec:
+            embed.add_field(name="Target Province", value=prec["display_name"], inline=True)
     embed.add_field(name="Roll & Scores", value=f"🎯 Roll Diff: **{war_log.roll_diff:.1f}**\nActor: `{war_log.attacker_score:.1f}` | Target: `{war_log.defender_score:.1f}`", inline=True)
     if war_log.casualties:
         embed.add_field(name="Casualties", value=f"🪖 `{war_log.casualties}`", inline=True)

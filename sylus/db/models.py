@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timezone
 from typing import Optional, Any, List
 from sqlalchemy import BigInteger, DateTime, ForeignKey, Integer, String, Text, JSON, Float, Boolean
@@ -6,6 +7,9 @@ from sylus.db.base import Base
 
 def utc_now() -> datetime:
     return datetime.now(timezone.utc)
+
+def generate_province_code() -> str:
+    return f"PRV-{uuid.uuid4().hex[:10].upper()}"
 
 class GlobalState(Base):
     __tablename__ = "global_state"
@@ -62,7 +66,17 @@ class Province(Base):
     __tablename__ = "provinces"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    code: Mapped[str] = mapped_column(String(50), unique=True, nullable=False, index=True, default=generate_province_code)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
+    country: Mapped[str] = mapped_column(String(100), default="Unknown", nullable=False)
+    country_code: Mapped[str] = mapped_column(String(10), default="XX", nullable=False)
+    display_name: Mapped[str] = mapped_column(String(150), default="", nullable=False, index=True)
+    search_name: Mapped[str] = mapped_column(String(150), default="", nullable=False, index=True)
+    aliases: Mapped[list[str]] = mapped_column(JSON, default=list, nullable=False)
+    climate: Mapped[str] = mapped_column(String(50), default="temperate", nullable=False)
+    deposits: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
+    population_capacity: Mapped[int] = mapped_column(Integer, default=100000, nullable=False)
+    centroid_coords: Mapped[list[int]] = mapped_column(JSON, default=list, nullable=False)
     nation_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("nations.id", ondelete="SET NULL"), nullable=True, index=True)
     terrain: Mapped[str] = mapped_column(String(50), default="plains", nullable=False)
     is_capital: Mapped[bool] = mapped_column(default=False, nullable=False)
@@ -250,7 +264,6 @@ class Contract(Base):
     is_immutable: Mapped[bool] = mapped_column(default=False, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
-
     signatories: Mapped[list["ContractSignatory"]] = relationship("ContractSignatory", back_populates="contract", cascade="all, delete-orphan")
     obligations: Mapped[list["ContractObligation"]] = relationship("ContractObligation", back_populates="contract", cascade="all, delete-orphan")
     escrow_holds: Mapped[list["EscrowHold"]] = relationship("EscrowHold", back_populates="contract", cascade="all, delete-orphan")
@@ -324,7 +337,6 @@ class UnitDesign(Base):
     build_time: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
-
     nation: Mapped["Nation"] = relationship("Nation", foreign_keys=[nation_id])
 
 class NationEvent(Base):
@@ -340,7 +352,6 @@ class NationEvent(Base):
     chosen_option: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     created_at_turn: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
-
 
 class MilitaryProductionQueue(Base):
     __tablename__ = "military_production_queues"
@@ -379,9 +390,7 @@ class MilitaryFormation(Base):
     province: Mapped["Province"] = relationship("Province")
     design: Mapped["UnitDesign"] = relationship("UnitDesign")
 
-
 from sylus.db.war_models import War, WarLog
-
 
 class NationIntel(Base):
     __tablename__ = "nation_intels"
