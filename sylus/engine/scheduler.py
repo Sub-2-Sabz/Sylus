@@ -154,7 +154,8 @@ class TurnScheduler:
 
             # 1. Post Map & Summary Embed
             if state.map_channel_id:
-                channel = self.bot.get_channel(state.map_channel_id)
+                get_ch = getattr(self.bot, "get_configured_channel", self.bot.get_channel)
+                channel = get_ch(state.map_channel_id)
                 if channel:
                     embed = discord.Embed.from_dict(result.summary_embed_dict)
                     files = []
@@ -163,20 +164,31 @@ class TurnScheduler:
                         embed.set_image(url="attachment://map.png")
                         files.append(file_obj)
 
-                    await channel.send(embed=embed, files=files)
+                    if hasattr(self.bot, "outbound_queue") and self.bot.outbound_queue:
+                        await self.bot.outbound_queue.enqueue(channel, embed=embed, files=files)
+                    else:
+                        await channel.send(embed=embed, files=files)
 
             # 2. Post Backup Snapshot
             if state.backup_channel_id and result.snapshot_data:
-                backup_channel = self.bot.get_channel(state.backup_channel_id)
+                get_ch = getattr(self.bot, "get_configured_channel", self.bot.get_channel)
+                backup_channel = get_ch(state.backup_channel_id)
                 if backup_channel:
                     snapshot_json = json.dumps(result.snapshot_data, indent=2).encode("utf-8")
                     file_obj = discord.File(
                         io.BytesIO(snapshot_json),
                         filename=f"sylus_snapshot_turn_{result.turn_number}.json",
                     )
-                    await backup_channel.send(
-                        content=f"📦 **Sylus Snapshot Backup** (Turn {result.turn_number})",
-                        file=file_obj,
-                    )
+                    if hasattr(self.bot, "outbound_queue") and self.bot.outbound_queue:
+                        await self.bot.outbound_queue.enqueue(
+                            backup_channel,
+                            content=f"📦 **Sylus Snapshot Backup** (Turn {result.turn_number})",
+                            files=[file_obj],
+                        )
+                    else:
+                        await backup_channel.send(
+                            content=f"📦 **Sylus Snapshot Backup** (Turn {result.turn_number})",
+                            file=file_obj,
+                        )
         except Exception as err:
             logger.error("Failed to post turn outputs to Discord channels", error=str(err))

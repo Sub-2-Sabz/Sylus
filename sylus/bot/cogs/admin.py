@@ -72,6 +72,17 @@ class AdminCog(commands.Cog):
                 return
         await ctx.respond("❌ Failed to execute forced turn or turn scheduler unavailable.")
 
+    @admin_group.command(name="sync_commands", description="Force re-syncing slash commands with Discord API")
+    async def sync_commands(self, ctx: discord.ApplicationContext):
+        await ctx.defer(ephemeral=True)
+        from sylus.bot.bot import sync_commands_if_changed
+        try:
+            synced = await sync_commands_if_changed(self.bot, force=True)
+            await ctx.respond("🔄 Slash commands forced sync completed successfully.", ephemeral=True)
+        except Exception as e:
+            logger.error("Admin sync_commands failed", error=str(e))
+            await ctx.respond(f"❌ Failed to sync slash commands: {e}", ephemeral=True)
+
     @admin_group.command(name="contract_override", description="Admin override resolution for contract appeals")
     async def contract_override(
         self,
