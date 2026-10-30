@@ -30,7 +30,7 @@ class MilitaryCog(commands.Cog):
     async def build_unit(
         self,
         ctx: discord.ApplicationContext,
-        province_name: str = discord.Option(str, "Province name to construct units in"),
+        province_name: str = discord.Option(str, "Province name to construct units in", autocomplete=province_autocomplete),
         design_id: int = discord.Option(int, "Unit Model Design ID"),
         quantity: int = discord.Option(int, "Quantity to produce", default=1),
     ):
@@ -85,7 +85,7 @@ class MilitaryCog(commands.Cog):
                     design = await session.get(UnitDesign, item.design_id)
                     prov = await session.get(Province, item.province_id)
                     d_name = design.name if design else f"Model #{item.design_id}"
-                    p_name = prov.name if prov else f"Province #{item.province_id}"
+                    p_name = prov.display_name if prov and prov.display_name else (prov.name if prov else f"Province #{item.province_id}")
                     lines.append(f"• **#{item.id}** `{item.quantity}x {d_name}` in **{p_name}** ({item.facility_type}) — ⏳ **{item.turns_remaining} turn(s)** remaining")
                 embed.description = "\n".join(lines)
 

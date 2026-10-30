@@ -8,6 +8,8 @@ from sylus.config import config
 from sylus.logging import setup_logging, get_logger
 from sylus.web.server import run_web_server, update_health_cache
 from sylus.bot.bot import create_bot
+from sylus.db.base import get_session
+from sylus.services.seed_world import sync_provinces_db
 
 logger = get_logger(__name__)
 
@@ -116,11 +118,13 @@ async def main():
     # 1. Start Web Server first
     web_runner = await run_web_server(bot=bot)
 
-    # 2. Run Database Migrations
+    # 2. Run Database Migrations & Seed World
     try:
         await run_migrations_async()
+        async with get_session() as session:
+            await sync_provinces_db(session)
     except Exception as e:
-        logger.critical("Aborting startup due to migration failure.", error=str(e))
+        logger.critical("Aborting startup due to migration/seeding failure.", error=str(e))
         await web_runner.cleanup()
         sys.exit(1)
 

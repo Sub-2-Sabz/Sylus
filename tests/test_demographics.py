@@ -39,9 +39,12 @@ async def test_civil_war_secession(db_session):
     db_session.add(nation)
     await db_session.commit()
 
-    cap_prov = Province(id=10, name="Capital", nation_id=nation.id, is_capital=True)
-    other_prov = Province(id=11, name="Rebel Prov", nation_id=nation.id, is_capital=False)
-    db_session.add_all([cap_prov, other_prov])
+    cap_prov = await db_session.get(Province, 10)
+    other_prov = await db_session.get(Province, 11)
+    cap_prov.nation_id = nation.id
+    cap_prov.is_capital = True
+    other_prov.nation_id = nation.id
+    other_prov.is_capital = False
     await db_session.commit()
 
     unrest_res = await evaluate_unrest_ladder(db_session, nation)

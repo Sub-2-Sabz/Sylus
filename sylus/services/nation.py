@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from sylus.config import config
 from sylus.db.models import Nation, Province, ResourceLedger, Building, AuditLog, utc_now
+from sylus.services.province_search import get_province_index
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)
@@ -13,7 +14,7 @@ async def create_nation(
     discord_user_id: int,
     name: str,
     leader_name: str,
-    capital_province_id: int,
+    capital_province_id: int | str,
     color: str = "#00FF00",
     flag_url: Optional[str] = None,
     government_type: str = "republic",
@@ -21,6 +22,11 @@ async def create_nation(
     starting_policy: Optional[str] = None,
 ) -> Nation:
     """Creates a new nation ensuring one nation per user and unowned capital province."""
+    if isinstance(capital_province_id, str) and not str(capital_province_id).isdigit():
+        rec = get_province_index().resolve(capital_province_id)
+        if rec:
+            capital_province_id = rec["id"]
+
     # Check if user already owns a nation
     existing_user_nation = (
         await session.execute(select(Nation).where(Nation.discord_user_id == discord_user_id))
@@ -160,7 +166,12 @@ async def set_policy(session: AsyncSession, nation: Nation, policy_key: str, ena
     return msg
 
 
-async def build_structure(session: AsyncSession, nation: Nation, province_id: int, building_type: str) -> Building:
+async def build_structure(session: AsyncSession, nation: Nation, province_id: int | str, building_type: str) -> Building:
+    if isinstance(province_id, str) and not str(province_id).isdigit():
+        rec = get_province_index().resolve(province_id)
+        if rec:
+            province_id = rec["id"]
+
     prov = (
         await session.execute(
             select(Province).where(Province.id == province_id, Province.nation_id == nation.id)
@@ -261,7 +272,51 @@ async def demolish_structure(session: AsyncSession, nation: Nation, building_id:
         raise ValueError("Building not found or not owned by your nation.")
 
     b_type = bldg.building_type
-    p_id = bldg.province_id
+    prov = await session.get(Province, bldg.province_id)
+    p_disp = prov.display_name if prov and prov.display_name else (prov.name if prov else f"Province #{bldg.province_id}")
     await session.delete(bldg)
     await session.commit()
-    return f"Demolished {b_type.title()} in Province #{p_id}."
+    return f"Demolished {b_type.title()} in {p_disp}."
+
+
+async def claim_province(session: AsyncSession, nation: Nation, province_identifier: str | int) -> Province:
+    """Claims an unowned province adjacent to nation's territory."""
+    p_id = None
+    if isinstance(province_identifier, int) or (isinstance(province_identifier, str) and str(province_identifier).isdigit()):
+        p_id = int(province_identifier)
+    else:
+        rec = get_province_index().resolve(province_identifier)
+        if rec:
+            p_id = rec["id"]
+
+    if not p_id:
+        raise ValueError(f"Province '{province_identifier}' not found.")
+
+    prov = await session.get(Province, p_id)
+    if not prov:
+        raise ValueError("Province not found.")
+    if prov.nation_id is not None:
+        raise ValueError(f"Province '{prov.display_name or prov.name}' is already owned.")
+
+    nation_provs = (await session.execute(select(Province).where(Province.nation_id == nation.id))).scalars().all()
+    nation_pids = {p.id for p in nation_provs}
+
+    if nation_pids:
+        from sylus.map.renderer import get_cached_map_renderer
+        renderer = get_cached_map_renderer(config.get("map.assets_dir", "sylus/assets/world"))
+        adj_ids = renderer.adjacency.get(str(p_id), [])
+        if not any(int(aid) in nation_pids for aid in adj_ids):
+            raise ValueError(f"Province '{prov.display_name or prov.name}' is not adjacent to your territory.")
+
+    claim_cost = float(config.get("balance.claim_cost_money", 5000.0))
+    money_ledger = (await session.execute(
+        select(ResourceLedger).where(ResourceLedger.nation_id == nation.id, ResourceLedger.resource_type == "money")
+    )).scalar_one_or_none()
+
+    if not money_ledger or money_ledger.balance < claim_cost:
+        raise ValueError(f"Insufficient funds to claim land (${claim_cost:,.0f} money required).")
+
+    money_ledger.balance -= claim_cost
+    prov.nation_id = nation.id
+    await session.commit()
+    return prov

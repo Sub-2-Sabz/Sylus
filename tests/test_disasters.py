@@ -16,9 +16,12 @@ async def test_disaster_turn_processing(db_session):
     db_session.add(nation)
     await db_session.commit()
 
-    p1 = Province(id=1, name="Coastal Prov", nation_id=nation.id, terrain="coastal", population=5000, infrastructure=3)
-    p2 = Province(id=2, name="Forest Prov", nation_id=nation.id, terrain="forest", population=5000, infrastructure=2)
-    db_session.add_all([p1, p2])
+    p1 = await db_session.get(Province, 1)
+    p2 = await db_session.get(Province, 2)
+    p1.nation_id = nation.id
+    p1.terrain = "coastal"
+    p2.nation_id = nation.id
+    p2.terrain = "forest"
 
     money = ResourceLedger(nation_id=nation.id, resource_type="money", balance=10000.0)
     db_session.add(money)
@@ -38,9 +41,10 @@ async def test_epidemic_spread_and_disaster_zones(db_session):
     db_session.add_all([n1, n2])
     await db_session.commit()
 
-    p1 = Province(id=101, name="Infected Prov", nation_id=n1.id, terrain="plains")
-    p2 = Province(id=102, name="Target Prov", nation_id=n2.id, terrain="plains")
-    db_session.add_all([p1, p2])
+    p1 = await db_session.get(Province, 101)
+    p2 = await db_session.get(Province, 102)
+    p1.nation_id = n1.id
+    p2.nation_id = n2.id
 
     # Initial epidemic zone on p1
     dzone = DisasterZone(

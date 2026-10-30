@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sylus.config import config
 from sylus.db.base import get_session
 from sylus.db.models import Nation, Province, ResourceLedger, Building, ResourceMarketIndex
-from sylus.services.nation import create_nation, set_policy, build_structure, upgrade_structure, demolish_structure
+from sylus.services.nation import create_nation, set_policy, build_structure, upgrade_structure, demolish_structure, claim_province
 from sylus.logging import get_logger
 
 logger = get_logger(__name__)
@@ -242,11 +242,31 @@ class NationCog(commands.Cog):
             except Exception as e:
                 await ctx.respond(f"⚠️ Error: {e}", ephemeral=True)
 
+    @nation.command(name="claim", description="Claim an unowned province adjacent to your nation.")
+    async def claim(
+        self,
+        ctx: discord.ApplicationContext,
+        province: str = discord.Option(str, "Target province to claim", autocomplete=province_autocomplete),
+    ):
+        await ctx.defer()
+        async with get_session() as session:
+            nat = (await session.execute(select(Nation).where(Nation.discord_user_id == ctx.author.id))).scalar_one_or_none()
+            if not nat:
+                await ctx.respond("You do not own a nation.", ephemeral=True)
+                return
+
+            try:
+                prov = await claim_province(session, nat, province)
+                p_disp = prov.display_name if prov.display_name else prov.name
+                await ctx.respond(f"🚩 **{nat.name}** successfully claimed **{p_disp}**!")
+            except Exception as e:
+                await ctx.respond(f"⚠️ Claim failed: {e}", ephemeral=True)
+
     @nation.command(name="build", description="Construct a building in a province.")
     async def build(
         self,
         ctx: discord.ApplicationContext,
-        province_id: int = discord.Option(int, "Target province ID"),
+        province: str = discord.Option(str, "Target province", autocomplete=province_autocomplete),
         building_type: str = discord.Option(
             str,
             "Building type",
@@ -265,9 +285,11 @@ class NationCog(commands.Cog):
                 return
 
             try:
-                b = await build_structure(session, nat, province_id, building_type)
+                b = await build_structure(session, nat, province, building_type)
                 b_cfg = config.get("buildings", {}).get(building_type, {})
-                await ctx.respond(f"🏗️ Construction started for **{b_cfg.get('name', building_type)}** in Province #{province_id} ({b.turns_remaining} turn(s) remaining).")
+                rec = get_province_index().resolve(province)
+                p_disp = rec["display_name"] if rec else str(province)
+                await ctx.respond(f"🏗️ Construction started for **{b_cfg.get('name', building_type)}** in **{p_disp}** ({b.turns_remaining} turn(s) remaining).")
             except Exception as e:
                 await ctx.respond(f"⚠️ Construction failed: {e}", ephemeral=True)
 
